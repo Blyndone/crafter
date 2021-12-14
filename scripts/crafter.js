@@ -47,7 +47,34 @@ Hooks.once('devModeReady', ({
 });
 
 
+
+// book- name of actor to be used as Receipe book, targetItem name of Item to be transformed
+async function createRecipe(book, targetItem){
+    let tempTag = ['Curative', 'Plant', 'Healing'];
+    
+    let protoItem  = duplicate(game.items.getName(targetItem));
+    book = game.actors.getName(book);
+
+    await book.createEmbeddedDocuments("Item", [protoItem]);
+    let item = book.data.items.find(i=>i.name === targetItem);
+    
+    let updates = {
+            _id: item.id,
+            name: "(Recipe)" + item.name,
+            data: {
+                description: {
+                    value: item.data.data.description.value + RecipeData.recipeTagger("Alchemy", "12 Hours", "DC = 15", tempTag)
+                }
+            }
+        }
+
+    await book.updateEmbeddedDocuments("Item",[updates]);
+    return item;
+    }
+
+
 class RecipeData {
+
 
         //returns the description of an item by searching for an exact name
     static descriptionFromName(name) {
@@ -86,54 +113,6 @@ class RecipeData {
 
             return newComponent;
     }
-        //creates a recipe Item on Book actor with a component?
-    static createRecipe(book, targetItem){
-        
-      //  const recipe = {
-     //       id: foundry.utils.randomID(16),
-       //     label: targetItem,
-          //  professionType: prof,
-            //Component: this.createComponent(book,componentKey),
-       //     craftingTime: cTime,
-   //         difficulty: diff
-    //    }
-
-        
-      //  const recipeData = {
-      //      _id: foundry.utils.randomID(16),
-      //      name: targetItem.name,
-    //        type: targetItem.type,
-    //        folder: null
-    //    }
-
-        const tempItem = new game.dnd5e.entities.Item5e( 
-            {
-              name: "(Recipe)"+targetItem.name,
-              type: targetItem.type,
-              data: {
-                name: "(Recipe)"+targetItem.name,
-                description: {
-                    value: targetItem.data.data.description.value+" xxxRecipexxx"
-                }
-                  
-
-              },
-              img: targetItem.img,
-
-                              
-            }
-            
-          );
-
-          const mergedItem = new mergeObject(targetItem, tempItem, {overwrite: true});
-
-
-        book.createEmbeddedDocuments("Item", [mergedItem.toObject()]); 
-            Crafter.log(false, mergedItem);
-            Crafter.log(false, tempItem);
-    //    let finishedRecipeItem = recipe;
-        return mergedItem;
-    }
 
     static findRecipes(book, componentKey){
         book = game.actors.getName(book);
@@ -147,6 +126,33 @@ class RecipeData {
 
 
     }
+
+    static recipeTagger(professionType, craftingTime, difficulty, ...component){
+        let build = [];
+        build.push("<br>@")
+        for (let i = 0; i < [...component].length; i++) {
+            build.push(args[i]+"<br>@");            
+        }
+        build.push(professionType+"<br>@");
+        build.push(craftingTime+"<br>@");
+        build.push(difficulty);
+        Crafter.log(false,build);
+        let tags = "";
+        for (let i = 0; i < build.length; i++) {
+            tags = tags.concat(build[i]);
+            
+        }
+        Crafter.log(false,tags);
+        return tags;
+
+
+
+    }
+
+
+
+
+
   /*   //finds recipes within a recipe book actor by name and keyword
     static findBook (name, keyword)  {
         let book = game.actors.getName(name);
