@@ -1,16 +1,17 @@
+console.log("Crafter || Active");
 class Crafter{
     static ID = 'crafter';
     static TEMPLATES = {
         CRAFTER: `modules/${this.ID}/templates/crafter.hbs`
     }
 
-    static log(force, ...args) {  
+    static log(force, ...args) {
         const shouldLog = force || game.modules.get('_dev-mode')?.api?.getPackageDebugValue(this.ID);
-    
+
         if (shouldLog) {
-          console.log(this.ID, '|', ...args);
+            console.log(this.ID, '|', ...args);
         }
-      }
+    }
 
 
 
@@ -45,4 +46,4 @@ Hooks.once('devModeReady', ({ registerPackageDebugFlag }) => {
     registerPackageDebugFlag(Crafter.ID);
   });
 
-  Crafter.log(force, "testing debug function")
+ 
