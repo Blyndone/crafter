@@ -34,6 +34,7 @@ class Crafter {
      * @property {string} keyword - keyword that designates the type of material
      * @property {int} value - the cost of the component in GP
      * @property {int} quantity - the number of items to satisfy the recipe 
+     * @property {boolean} isComponent - true for compoenents
      */
 
 
@@ -86,51 +87,52 @@ class RecipeData {
             return newComponent;
     }
         //creates a recipe Item on Book actor with a component?
-    static createRecipe(book, componentKey, targetItem){
-        let prof = "Blacksmithing";
-        let cTime = 1;
-        let diff = "Hard";
-
-        const recipe = {
-            id: foundry.utils.randomID(16),
-            label: targetItem,
-            professionType: prof,
-            Component: this.createComponent(book,componentKey),
-            craftingTime: cTime,
-            difficulty: diff
-        }
+    static createRecipe(book, targetItem){
+        
+      //  const recipe = {
+     //       id: foundry.utils.randomID(16),
+       //     label: targetItem,
+          //  professionType: prof,
+            //Component: this.createComponent(book,componentKey),
+       //     craftingTime: cTime,
+   //         difficulty: diff
+    //    }
 
         
-        const recipeData = {
-            _id: recipe.id,
-            name: recipe.label,
-            type: "loot",
-            folder: null
-        }
+      //  const recipeData = {
+      //      _id: foundry.utils.randomID(16),
+      //      name: targetItem.name,
+    //        type: targetItem.type,
+    //        folder: null
+    //    }
 
-        const tempItem = new Item( 
+        const tempItem = new game.dnd5e.entities.Item5e( 
             {
-              name: recipe.label,
-              type: "loot",
+              name: "(Recipe)"+targetItem.name,
+              type: targetItem.type,
               data: {
-
+                name: "(Recipe)"+targetItem.name,
                 description: {
-                    value: "@"+recipe.Component.keyword
+                    value: targetItem.data.data.description.value+" xxxRecipexxx"
                 }
                   
 
               },
-              img: "icons/sundries/books/book-clasp-spiral-green.webp",
+              img: targetItem.img,
 
                               
             }
             
           );
 
-        book.createEmbeddedDocuments("Item", [tempItem.toObject()]); 
-            Crafter.log(false, tempItem)
-        let finishedRecipeItem = recipe;
-        return tempItem;
+          const mergedItem = new mergeObject(targetItem, tempItem, {overwrite: true});
+
+
+        book.createEmbeddedDocuments("Item", [mergedItem.toObject()]); 
+            Crafter.log(false, mergedItem);
+            Crafter.log(false, tempItem);
+    //    let finishedRecipeItem = recipe;
+        return mergedItem;
     }
 
     static findRecipes(book, componentKey){
