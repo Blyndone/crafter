@@ -1,0 +1,56 @@
+
+/**
+ * A single Recipe in our list of Recipes.
+ * @typedef {Object} Recipe
+ * @property {string} id - A unique ID to identify this recipe.
+ * @property {string} label - The text of the name of the recipe.
+ * @property {string} professionType - The profession that crafts this recipe
+ * @property {Object} Component - an object that contains what kind of materials can be used
+ * @property {string} craftingTime - time required to craft item
+ * @property {string} difficulty - Either a check needed or a profeciency needed
+ */
+
+/**
+ * A single Component used in a recipe.
+ * @typedef {Object} Component
+ * @property {string} id - A unique ID to identify this component.
+ * @property {string} label - The text of the name of the component.
+ * @property {string} keyType - keyword that designates the type of material
+ * @property {int} value - the cost of the component in GP
+ * @property {int} quantity - the number of items to satisfy the recipe 
+ */
+
+
+Description - Operation
+GM should be able to create Recipes  - Create
+Users should be able to view recipes - Read
+Users should be able see inventory items that are applicable - Read
+Users should be able to craft items, consuming materials - Create, Delete
+Gm should be able to edit Recipes - Edit Recipe
+Gm should be able to delete Recipes - delete Recipes
+GM should be able to Store Recipies in a Compendium - Create
+Gm should be able to Retrieve Recipes from a Compendium - Read
+
+Storage options for recipes- 
+    POC- Store data within the Item it self, most likly within the description field.
+    Final - Within a header flyout
+    Benefits - Can piggyback on foundry tool such as compendiums, and it front facing and easy to use
+    Negatives - Cluttering up a commonly used asset, adds overhead to a commonly used object, might be ugly
+
+Key identifiers for Components-
+    POC - Key stored in either Source field, description field, or name
+    Final - Key stored in flags set by a Dropdown, with Categories set in settings
+
+UI User side - 
+    POC - Form is accessed by header flyout on character sheet
+    POC - Form that displays available recipies that are set in the GM version of the Form
+    mid POC - Form can also display reagents that are available within their own inventory
+    Final - Can delete items from character, and add the item crafted
+
+UI GM side - 
+    POC - Stores a bank of recipies that are stored on a recipe actor, or within a specific compendium
+    POC - Can create a recipe item through a Form that generates the correct recipe item
+
+
+
+
