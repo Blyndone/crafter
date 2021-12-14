@@ -37,13 +37,30 @@ class Crafter{
  */
 
 
-
-
-
 }
 
 Hooks.once('devModeReady', ({ registerPackageDebugFlag }) => {
     registerPackageDebugFlag(Crafter.ID);
   });
 
+
+  class RecipeData{
+    
+
+    static descriptionFromName(name){
+
+    Crafter.log(false, game.items.getName(name).data.data.description.value);
+    
+}
+    static searchDescription(term){
+    Crafter.log(false, game.items.find(item =>item.data.data.description.value === term).data.name);
+    }
+
+    static searchDescriptionMulti(term){
+        Crafter.log(false, game.items.filter(item =>item.data.data.description.value === term).slice(0));
+        }
+
+
+
+  }
  
