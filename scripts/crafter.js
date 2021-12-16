@@ -45,7 +45,17 @@ class Crafter {
     static initialize() {
          this.recipeMenu = new RecipeMenu();
          this.craftingMenu = new CraftingMenu();
+         
          }
+    static setInitialFormData(craftingMenu){
+        this.craftingMenu.formData = {
+            item: RecipeData.itemFromName("Potion of Healing"),
+            books: RecipeData.findBooks("Book"),
+            recipies: RecipeData.findRecipes("TestBook", "(Recipe)"),
+            bookName: "TestBook",
+        }
+        Crafter.log(false, craftingMenu.formData)
+    }
 
 
 
@@ -65,6 +75,7 @@ class Crafter {
 
           button.click(() =>
          {  
+            
             Crafter.recipeMenu.render(true);
          }); 
         }
@@ -82,6 +93,7 @@ class Crafter {
     
               button2.click(() =>
              {  
+                 Crafter.setInitialFormData(Crafter.craftingMenu);
                 Crafter.craftingMenu.render(true);
              }); 
             
@@ -171,6 +183,10 @@ class RecipeData {
         
         return game.items.getName(name);
     }
+    static recipeItemFromName(book, name) {
+        
+        return game.actors.getName(book).items.getName(name)
+    }
     //returns an array of item keys based 
     static findComponents(book, term) {  
         let bookObj = game.actors.getName(book);
@@ -207,16 +223,15 @@ class RecipeData {
             return newComponent;
     }
 
-    static findRecipes(book, componentKey){
+    static findRecipes(book, key){
         book = game.actors.getName(book);
-        let multiObj = book.data.items.filter(item => (item.data.data.description.value).includes(componentKey) );
+        let multiObj = book.data.items.filter(item => (item.name).includes(key) );
         let multi = [];
         for (let i = 0; i< multiObj.length; i++){
-            multi.push(multiObj[i].data._id)
+            multi.push(multiObj[i].name)
         }
         return  multi;
-        return rec;
-
+        
 
     }
 
@@ -236,11 +251,7 @@ class RecipeData {
 
         return tags;
 
-
-
     }
-
-
 
 }
 class CraftingMenu extends FormApplication{
@@ -249,6 +260,7 @@ class CraftingMenu extends FormApplication{
      
         const overrides = {
             closeOnSubmit: false,
+            submitOnChange: true,
             height: '700',
             width: '500',
             id: 'crafter',
@@ -256,6 +268,10 @@ class CraftingMenu extends FormApplication{
             template: Crafter.TEMPLATES.CRAFTING,
             title: 'Crafting Menu',
             currentItem: 'Potion of Healing',
+            currentBook: "TestBook",
+            recipeIndex: '1',
+            
+            
      
         };
 
@@ -263,12 +279,21 @@ class CraftingMenu extends FormApplication{
         return mergedOptions;
 
     }
-    getData(options) {
-        return {
-            item: RecipeData.itemFromName(this.currentItem),
-            books: RecipeData.findBooks("Book"),
 
+//initial and submit
+    getData(options) {
+      Crafter.log(false, "Get Data")
+
+
+        return {
+            item: RecipeData.recipeItemFromName(options.currentBook, options.currentItem),
+            books: RecipeData.findBooks("Book"),
+            recipies: RecipeData.findRecipes(options.currentBook, "(Recipe)"),
+            selectedBook: options.currentBook,
+            recipeIndex: options.recipeIndex,
+            
         }
+        
     }
 
     activateListeners(html) {
@@ -278,11 +303,51 @@ class CraftingMenu extends FormApplication{
     
 
     async _updateObject(event, formData) {
+        Crafter.log(false, event.type);
+     //   if(!formData.bookName){
+      //      formData.bookName = "TestBook";
+      //  }
+        
+       // this.currentItem = RecipeData.itemFromName(this.currentItem);
+      //  this.books =  RecipeData.findBooks("Book");
+        
+        
+       
+
+
+        if (event.type === "change"){
+            const caller = event.target.id;
+            switch(caller){
+                case 'changeBook':{
+                    this.options.currentBook = event.target.value;
+                    this.render();
+                }
+                case 'selectedItem':{
+                    this.options.currentItem = event.target.value;
+                    this.options.recipeIndex = event.target.selectedIndex;
+
+                    this.render();
+
+                }
+                default:{
+
+                }
+            }
+
+
+
+        }
+
+
+
+
         if (event.type === "submit") {
             const caller = event.submitter.value;
             switch (caller) {
+               
                 case 'changeItem': {
-                    this.currentItem = formData.submitText;
+                    this.currentItem = formData.selectedItem;
+                    this.recipies = RecipeData.findRecipes(formData.bookName, "(Recipe)")
                     this.render();
                     break;
                 }
@@ -298,10 +363,11 @@ class CraftingMenu extends FormApplication{
                     break;
                 }
                 default:
+                    
             }
         }
 
-
+      
 
 
     }
