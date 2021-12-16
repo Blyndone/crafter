@@ -1,6 +1,7 @@
 <form id="recipeMenu">
   <div>
     <h1>{{item.name}}</h1>
+
   </div>
   <div>
     <table cellpadding="10">
@@ -8,7 +9,7 @@
       <tbody>
         <tr>
           <td style="width: 100px;">
-            <img src="{{item.img}}" height="100" width="100" cellpadding="10"/>
+            <img src="{{item.img}}" height="100" width="100" cellpadding="10" />
           </td>
           <td style="width: 100%-100">
             {{{item.data.data.description.value}}}
@@ -26,7 +27,12 @@
           <Strong>Book Name</Strong>
         </td>
         <td>
-          <input type="text" name = "bookName"  data-dtype="String" placeholder = "Book Name">
+          <select name="bookName" aria-placeholder="Bookname">
+         {{#each books}}
+            <option value= "{{this}}" name = "{{this}}"> {{this}}</option>
+           {{/each}}
+          </select>
+          {{!<input type="text" name = "bookName"  data-dtype="String" placeholder = "Book Name">--}}
         </td>
       </tr>
       <tr>

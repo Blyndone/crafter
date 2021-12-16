@@ -2,7 +2,8 @@ console.log("Crafter || Active");
 class Crafter {
     static ID = 'crafter';
     static TEMPLATES = {
-        CRAFTER: `modules/${this.ID}/templates/crafter.hbs`
+        RECIPE: `modules/${this.ID}/templates/recipe.hbs`,
+        CRAFTING: `modules/${this.ID}/templates/crafting.hbs`
     }
 
     static log(force, ...args) {
@@ -43,6 +44,7 @@ class Crafter {
 
     static initialize() {
          this.recipeMenu = new RecipeMenu();
+         this.craftingMenu = new CraftingMenu();
          }
 
 
@@ -50,7 +52,8 @@ class Crafter {
 
     static renderJournalDirectory(app, html)
    {
-        const button = $(`<button class="crafter-button">Crafing Menu</button>`);
+    if ((game.user.isGM)){
+        const button = $(`<button class="recipe-button" width = "100" align = left>Recipe Menu</button>`);
 
          let footer = html.find('.directory-footer');
          if (footer.length === 0)
@@ -64,6 +67,25 @@ class Crafter {
          {  
             Crafter.recipeMenu.render(true);
          }); 
+        }
+
+        
+            const button2 = $(`<button class="crafter-button"  width = "100" align = right>Crafting Menu</button>`);
+    
+             let footer = html.find('.directory-footer');
+             if (footer.length === 0)
+             {
+                footer = $(`<footer class="directory-footer"></footer>`);
+                html.append(footer);
+             }
+             footer.append(button2);
+    
+              button2.click(() =>
+             {  
+                Crafter.craftingMenu.render(true);
+             }); 
+            
+    
       
 
    /*    if (!(game.user.isGM && game.settings.get(constants.moduleName, settings.showFolder)))
@@ -106,12 +128,11 @@ Hooks.on('renderJournalDirectory', Crafter.renderJournalDirectory);
 
 
 // book- name of actor to be used as Receipe book, targetItem name of Item to be transformed
-async function createRecipe(book, targetItem){
-    let tempTag = ['Curative', 'Plant', 'Healing'];
+async function createRecipe(book, targetItem, materialType, profession, time, difficulty){
+    //let tempTag = ['Curative', 'Plant', 'Healing'];
     
     let protoItem  = duplicate(game.items.getName(targetItem));
     book = game.actors.getName(book);
-
     await book.createEmbeddedDocuments("Item", [protoItem]);
     let item = book.data.items.find(i=>i.name === targetItem);
     
@@ -120,7 +141,7 @@ async function createRecipe(book, targetItem){
             name: "(Recipe)" + item.name,
             data: {
                 description: {
-                    value: item.data.data.description.value + RecipeData.recipeTagger("Alchemy", "12 Hours", "DC = 15", tempTag)
+                    value: item.data.data.description.value + RecipeData.recipeTagger(profession, time, difficulty, materialType)
                 }
             }
         }
@@ -160,6 +181,15 @@ class RecipeData {
         }
         return  multi;
     }
+    static findBooks(key){
+        let bookObj = game.actors.filter(i =>i.name.includes(key))
+        let books = [];
+        for (let i = 0; i < bookObj.length; i++){             
+        books.push(bookObj[i].name);
+        }
+        return books;
+    }
+
     // creates a Component Object from an item key
     static createComponent (actor, key){
         let item = actor.data.items.get(key);
@@ -190,74 +220,54 @@ class RecipeData {
 
     }
 
-    static recipeTagger(professionType, craftingTime, difficulty, ...component){
+    static recipeTagger(professionType, craftingTime, difficulty, component){
         let build = [];
-        build.push("<br>@")
-        for (let i = 0; i < [...component].length; i++) {
-            build.push(build[i]+"<br>@");            
-        }
-        build.push(professionType+"<br>@");
-        build.push(craftingTime+"<br>@");
+        build.push('<br>')
+        build.push('@'+component+'<br>@')
+        build.push(professionType+'<br>@');
+        build.push(craftingTime+'<br>@');
         build.push(difficulty);
-        Crafter.log(false,build);
+    
         let tags = "";
         for (let i = 0; i < build.length; i++) {
             tags = tags.concat(build[i]);
             
         }
-        Crafter.log(false,tags);
+
         return tags;
 
 
 
     }
 
-  /*   //finds recipes within a recipe book actor by name and keyword
-    static findBook (name, keyword)  {
-        let book = game.actors.getName(name);
-        let recipe = [this.searchDescriptionMulti(book, keyword)];
-        let allRecipe = [];
-        for (let i=0; i<recipe.length; i++){
-            allRecipe.push(this.createComponent(book, recipe[0][i]));
-        }
-       
-        
-        return  allRecipe;
- 
-    }*/
+
 
 }
 class CraftingMenu extends FormApplication{
-    
-}
-
-class RecipeMenu extends FormApplication {
     static get defaultOptions() {
         const defaults = super.defaultOptions;
-
+     
         const overrides = {
             closeOnSubmit: false,
             height: '700',
             width: '500',
             id: 'crafter',
             submitOnChange: true,
-            template: Crafter.TEMPLATES.CRAFTER,
-            title: 'Recipe Menu',
+            template: Crafter.TEMPLATES.CRAFTING,
+            title: 'Crafting Menu',
             currentItem: 'Potion of Healing',
-
+     
         };
 
         const mergedOptions = foundry.utils.mergeObject(defaults, overrides);
-
         return mergedOptions;
 
     }
     getData(options) {
-    //    if (this.currentItem === undefined){
-   //         return RecipeData.itemFromName("Potion of Healing")
-    //    }else
         return {
-            item: RecipeData.itemFromName(this.currentItem)
+            item: RecipeData.itemFromName(this.currentItem),
+            books: RecipeData.findBooks("Book"),
+
         }
     }
 
@@ -268,49 +278,40 @@ class RecipeMenu extends FormApplication {
     
 
     async _updateObject(event, formData) {
-        if (event.type === "submit"){
-        const caller = event.submitter.value;
-        switch (caller) {
-            case 'changeItem': {
-                this.currentItem = formData.submitText;
-                this.render();
-                break;
+        if (event.type === "submit") {
+            const caller = event.submitter.value;
+            switch (caller) {
+                case 'changeItem': {
+                    this.currentItem = formData.submitText;
+                    this.render();
+                    break;
+                }
+                case 'createRecipe': {
+                    Crafter.log(false, "Creating Recipe", formData)
+                    if (formData.bookName && this.currentItem) {
+                        Crafter.log(false, "Crafting is Ready");
+                        createRecipe(formData.bookName, this.currentItem, formData.material, formData.profession, formData.time, formData.difficulty);
+                    } else {
+                        Crafter.log(false, "Crafting Failed", formData.bookName, this.currentItem.name)
+                    }
+
+                    break;
+                }
+                default:
             }
-            case 'createRecipe': {
-            Crafter.log(false,"Creating Recipe", formData)
-            if (formData.bookName && this.currentItem){
-                Crafter.log(false, "Crafting is Ready");
-                createRecipe(formData.bookName, this.currentItem);
-            }else{
-                Crafter.log(false, "Crafting Failed",formData.bookName, this.currentItem.name)
-            }
-
-
-            
-
-
-
-
-                break;
-            }
-            default:
         }
-        }
-        // console.log(formData);
-        // console.log("Form Data ^");
-        // console.log(event);
 
-       
 
-        }
+
+
+    }
 
     async _handleButtonClick (event){
         const clickedElement = $(event.currentTarget);
         const action = clickedElement.data().action;
         const toDoId = clickedElement.parents('[data-todo-id]')?.data()?.todoId;
         if(action){
-        
-        
+               
         switch(action){
             case 'create': {
                 await Crafter.log(false, 'Create',action)
@@ -340,5 +341,137 @@ class RecipeMenu extends FormApplication {
 
     }  
 
+    
 
 }
+
+class RecipeMenu extends FormApplication {
+    static get defaultOptions() {
+        const defaults = super.defaultOptions;
+      //  let bookArr = RecipeData.findBooks("Book");
+        const overrides = {
+            closeOnSubmit: false,
+            height: '700',
+            width: '500',
+            id: 'crafter',
+            submitOnChange: true,
+            template: Crafter.TEMPLATES.RECIPE,
+            title: 'Recipe Menu',
+            currentItem: 'Potion of Healing',
+       //     books: bookArr,
+        
+        };
+
+        const mergedOptions = foundry.utils.mergeObject(defaults, overrides);
+        return mergedOptions;
+
+    }
+    getData(options) {
+        return {
+            item: RecipeData.itemFromName(this.currentItem),
+            books: RecipeData.findBooks("Book"),
+
+        }
+    }
+
+    activateListeners(html) {
+        super.activateListeners(html);
+        html.on('click', "[data-action]", this._handleButtonClick.bind(this));
+      }
+    
+
+    async _updateObject(event, formData) {
+        if (event.type === "submit") {
+            const caller = event.submitter.value;
+            switch (caller) {
+                case 'changeItem': {
+                    this.currentItem = formData.submitText;
+                    this.render();
+                    break;
+                }
+                case 'createRecipe': {
+                    Crafter.log(false, "Creating Recipe", formData)
+                    if (formData.bookName && this.currentItem) {
+                        Crafter.log(false, "Crafting is Ready");
+                        createRecipe(formData.bookName, this.currentItem, formData.material, formData.profession, formData.time, formData.difficulty);
+                    } else {
+                        Crafter.log(false, "Crafting Failed", formData.bookName, this.currentItem.name)
+                    }
+
+                    break;
+                }
+                default:
+            }
+        }
+
+
+
+
+    }
+
+    async _handleButtonClick (event){
+        const clickedElement = $(event.currentTarget);
+        const action = clickedElement.data().action;
+        const toDoId = clickedElement.parents('[data-todo-id]')?.data()?.todoId;
+        if(action){
+               
+        switch(action){
+            case 'create': {
+                await Crafter.log(false, 'Create',action)
+                this.currentItem = "Healing Herbs";
+                this.render();
+                break;
+            }
+            case 'delete':{
+                await Crafter.log(false, 'Delete ',action)
+                this.currentItem = "Dagger";
+                this.render();
+                break;
+            }
+            case 'createRecipe':{
+                createRecipe('[book-name]', '[item.name]');
+                this.render();
+
+            }
+            
+            default :
+                Crafter.log(false, 'Invalid action detected ',action)
+            this.render();
+
+        }
+    }
+
+
+    }  
+
+    
+
+}
+
+Handlebars.registerHelper("hbGet", function(searchType, key) {
+
+    switch (searchType){
+        case "allBooks":{
+            bookObj = game.actors.filter(i =>i.name.includes(key))
+            let books = [];
+            for (let i = 0; i < bookObj.length; i++){             
+            books.push(bookObj[i].name);
+            }
+            return books;
+        }
+            
+                
+            
+             
+        
+        case "filterItems":{
+
+        }
+        default:{
+            return "No search available"
+        }
+    }
+
+ 
+  });
+ 

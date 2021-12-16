@@ -1,0 +1,111 @@
+<form id="recipeMenu">
+  <div>
+    <h1>{{item.name}}</h1>
+
+  </div>
+  <div>
+    <table cellpadding="10">
+      <thead height="20"></thead>
+      <tbody>
+        <tr>
+          <td style="width: 100px;">
+            <img src="{{item.img}}" height="100" width="100" cellpadding="10" />
+          </td>
+          <td style="width: 100%-100">
+            {{{item.data.data.description.value}}}
+          </td>
+        </tr>
+        <tr></tr>
+      </tbody>
+    </table>
+  </div>
+  <table cellpadding = "10">
+    <thead><h2>Options</h2></thead>
+    <tbody>
+      <tr>
+        <td width="40">
+          <Strong>Book Name</Strong>
+        </td>
+        <td>
+          <select name="bookName" aria-placeholder="Bookname">
+         {{#each books}}
+            <option value= "{{this}}" name = "{{this}}"> {{this}}</option>
+           {{/each}}
+          </select>
+          {{!<input type="text" name = "bookName"  data-dtype="String" placeholder = "Book Name">--}}
+        </td>
+      </tr>
+      <tr>
+        <td width="40">
+          <Strong>Material Type</Strong>
+        </td>
+        <td>
+          <input type="text" name = "material"  data-dtype="String" placeholder="Material Type">
+        </td>
+      </tr>
+      <tr>
+        <td width="40">
+          <Strong>Profession Type</Strong>
+        </td>
+        <td>
+          <input type="text" name = "profession"  data-dtype="String" placeholder="Profession Type">
+        </td>
+      </tr>
+      <tr>
+        <td width="40">
+          <Strong>Time</Strong>
+        </td>
+        <td>
+          <input type="text" name = "time"  data-dtype="String" placeholder="Crafting Time">
+        </td>
+      </tr>
+      <tr>
+        <td width="40">
+          <Strong>Difficulty</Strong>
+        </td>
+        <td>
+          <input type="text" name = "difficulty"  data-dtype="String" placeholder="Crafting Difficulty">
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <table>
+    <thead>Search for Item</thead>
+    <tbody>
+      <tr>
+        <td><input type="text" name="submitText" id="inputText"  data-dtype="String" placeholder={{#if item.name}}{{{item.name}}}{{else}}"Search for an Item"{{/if}}></td>
+       
+        <td><button type="submit" value="changeItem" name = "Sub">Submit</button></td>
+        <td><button type="submit" value="createRecipe" name = "Sub">Create Recipe</button></td> 
+      </tr>
+    </tbody>
+  </table>
+ 
+</form>
+
+
+
+
+
+
+{{!-- 
+<form>
+  <ul class="todo-list flexcol">
+    #each todos
+    <li class="flexrow" data-todo-id="{{id">
+      <input type="checkbox" name="{{id.isDone" title="{{localize " TODO-LIST.mark-done"" data-dtype="Boolean"
+        {{checked isDone />
+
+      <input type="text" value="{{label" name="{{id.label" data-dtype="String" />
+
+      <button type="button" title="{{localize " TODO-LIST.delete-todo"" data-action="delete"
+        class="flex0 todo-list-icon-button">
+        <i class="fas fa-trash"></i>
+      </button>
+    </li>
+    {{/each
+  </ul>
+
+  <button type="button" data-action="create"><i class="fas fa-plus"></i> {{localize "TODO-LIST.add-todo"</button>
+</form>
+--}}
