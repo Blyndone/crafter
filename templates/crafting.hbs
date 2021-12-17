@@ -1,41 +1,51 @@
 <form id="craftingmenu" class="crafter-crafting-menu">
- 
-
   <div class="crafter-crafting-item-name">
-    {{item.name}}
+    {{currentItemRaw}}
 
   </div>
-  <div>
-    <table class="crafter-item-image-list-frame">
+  <div class="crafter-item-list-frame">
+    <table>
       <thead></thead>
       <tbody>
-        <tr >
-          <td>
-            <img src="{{item.img}}" class="crafter-item-image">
-          </td>
-    
+        <tr>
+        
+        
           <td>
             <select class="crafter-item-list" id="selectedItem" name="selectedItem" size="10" multiple="">
-              <option value="" selected="selected" index={{recipeIndex}}>{{item.name}}</option>
+             {{! <option class="crafter-select-option-selected" value="" selected="selected" index={{recipeIndex}}>
+                ---{{item.name}}---</option>
               {{#each recipies}}
-              <option value="{{this}}" index={{@index}} name="{{this}}"> {{this}}</option>
-    
+
+              {{#if (isdefined @index XXX)}}
+              <option class="crafter-select-option-selected" value="{{this}}" selected="selected" index={{@index}} name="{{this}}"> {{this}}</option>
+              {{else}}
+              <option class="crafter-select-option" value="{{this}}" index={{@index}} name="{{this}}"> {{this}}</option>
+              {{/if}}
               {{/each}}
+        
             </select>
           </td>
-    
+        
         </tr>
     
       </tbody>
     </table>
-    <div class="crafter-item-description">
+    </div>
+    <div class="crafter-item-description-frame">
     <table>
       <tr>
-        <td>{{{baseDesc}}}</td>
+        <td class="crafter-item-image-frame">
+            <img src="{{item.img}}" class="crafter-item-image" >
+          </td>
+          
+        <td class="crafter-item-description-frame-frame"><div class="crafter-item-description">
+
+        <b>{{currentItemRaw}}</b>
+        {{{baseDesc}}}</div></td>
       </tr>
     </table>
 </div>
-  </div>
+  
   <table>
     <thead><h2>Options</h2></thead>
     <tbody>

@@ -106,7 +106,7 @@ class Crafter {
               button2.click(() =>
              {  
               //   Crafter.setInitialFormData(Crafter.craftingMenu);
-                Crafter.craftingMenu.render(true);
+                Crafter.craftingMenu.render(true); 
              }); 
             
     
@@ -143,8 +143,10 @@ Hooks.on('renderJournalDirectory', Crafter.renderJournalDirectory);
 
   Hooks.once('init', () => {
     Crafter.initialize();
+    
   });
 
+ 
 
 
 
@@ -331,8 +333,8 @@ class CraftingMenu extends FormApplication{
         const overrides = {
             closeOnSubmit: false,
             submitOnChange: true,
-            height: '700',
-            width: '500',
+            height: '850',
+            width: '600',
             resizable: true,
             id: 'crafter',
             submitOnChange: true,
@@ -373,6 +375,9 @@ class CraftingMenu extends FormApplication{
             time: parsedItem.time,
             difficulty: parsedItem.difficulty,
             baseDesc: parsedItem.baseDesc,
+            currentItemRaw: options.currentItem.slice(8),
+            currentItem: options.currentItem
+        
             
             
         }
@@ -395,6 +400,7 @@ class CraftingMenu extends FormApplication{
                     this.render();
                 }
                 case 'selectedItem':{
+                    Crafter.log(false, "curr change")
                     this.options.currentItem = event.target.value;
                     this.options.recipeIndex = event.target.selectedIndex;
 
@@ -411,31 +417,31 @@ class CraftingMenu extends FormApplication{
         }
 
         //needs to be changed to craft items
-        if (event.type === "submit") {
-            const caller = event.submitter.value;
-            switch (caller) {
+        // if (event.type === "submit") {
+        //     const caller = event.submitter.value;
+        //     switch (caller) {
                
-                case 'changeItem': {
-                    this.currentItem = formData.selectedItem;
-                    this.recipies = RecipeData.findRecipes(formData.bookName, "(Recipe)")
-                    this.render();
-                    break;
-                }
-                case 'createRecipe': {
-                    Crafter.log(false, "Creating Recipe", formData)
-                    if (formData.bookName && this.currentItem) {
-                        Crafter.log(false, "Crafting is Ready");
-                        createRecipe(formData.bookName, this.currentItem, formData.material, formData.profession, formData.time, formData.difficulty);
-                    } else {
-                        Crafter.log(false, "Crafting Failed", formData.bookName, this.currentItem.name)
-                    }
+        //         case 'changeItem': {
+        //             this.currentItem = formData.selectedItem;
+        //             this.recipies = RecipeData.findRecipes(formData.bookName, "(Recipe)")
+        //             this.render();
+        //             break;
+        //         }
+        //         case 'createRecipe': {
+        //             Crafter.log(false, "Creating Recipe", formData)
+        //             if (formData.bookName && this.currentItem) {
+        //                 Crafter.log(false, "Crafting is Ready");
+        //                 createRecipe(formData.bookName, this.currentItem, formData.material, formData.profession, formData.time, formData.difficulty);
+        //             } else {
+        //                 Crafter.log(false, "Crafting Failed", formData.bookName, this.currentItem.name)
+        //             }
 
-                    break;
-                }
-                default:
+        //             break;
+        //         }
+        //         default:
                     
-            }
-        }
+        //     }
+        // }
 
 
     }
@@ -583,8 +589,16 @@ class RecipeMenu extends FormApplication {
     
 
 }
-//no longer used
-// Handlebars.registerHelper("hbGet", function(searchType, key) {
+
+Handlebars.registerHelper('isdefined', function (value, value2) {
+    Crafter.log(false, "1"+value);
+    Crafter.log(false, "2"+value2);
+    value2 = Crafter.craftingMenu.options.recipeIndex;
+    Crafter.log(false, "2"+value2);
+    return value == value2;
+  });
+
+// Handlebars.registerHelper("HBTEST", function(object, key) {
 
 //     switch (searchType){
 //         case "allBooks":{
@@ -609,5 +623,5 @@ class RecipeMenu extends FormApplication {
 //     }
 
  
-//   });
+//   }); 
  

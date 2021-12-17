@@ -1,31 +1,64 @@
+select option {
+  background: black; 
+  color: black; 
+  box-shadow: inset 20px 20px powderblue
+} 
+
+select option:hover {
+  background: black;
+  color: black; 
+  box-shadow: inset 20px 20px teal;
+}
+
+select option:checked{
+  background: black;
+  color: black !important;
+  box-shadow: inset 20px 20px steelblue;
+}
+
+select option:selected{
+  background: red;
+  color: red;
+  box-shadow: inset 20px 20px red;
+}
+
+select option:active{
+  background: black;
+  color :black; 
+  box-shadow: inset 20px 20px teal; 
+
+}
+
+
 .crafter-crafter-button {
-    background: transparent;
-    padding: 0;
-    color: white;
-    line-height: normal;
-    border: 0;
-    align-self: right;
-    width: 100%;
-    height: 25px;
+  background: transparent;
+  padding: 0;
+  color: white;
+  line-height: normal;
+  border: 0;
+  align-self: right;
+  width: 100%;
+  height: 25px;
 
-  }
+}
 
-  .crafter-recipe-button {
-    background: transparent;
-    padding: 0;
-    color: white;
-    line-height: normal;
-    border: 0;
-    align-self: left;
-    width: 100%;
-    height: 25px;
+.crafter-recipe-button {
+  background: transparent;
+  padding: 0;
+  color: white;
+  line-height: normal;
+  border: 0;
+  align-self: left;
+  width: 100%;
+  height: 25px;
 
-  }
+}
 
-  .crafter-crafting-menu{
-    height:fit-content;
-  }
-  .crafter-crafting-item-name{
+.crafter-crafting-menu {
+  height: fit-content;
+}
+
+.crafter-crafting-item-name {
   color: black;
   padding: 10px;
   border-bottom: 5px;
@@ -36,78 +69,118 @@
   font-weight: bolder;
   font-family: serif;
   font-size: 30px;
-  
- 
-  }
-  .crafter-item-image-list-frame{
-    border-bottom: 5px solid maroon;
-    border-top: 5px solid maroon;
-    border-radius: 10px;
-    border-color: maroon;
-    border-collapse: separate !important;
-  
+  margin-top: 0px;
+  margin-bottom: 5px;
+
 
 }
-  .crafter-item-image-frame{
-    
-    padding: 10px;
-    border-right: 5px solid maroon;
-    border-bottom: 5px;
-    border-top: 5px;
-    border-style: solid none solid none;
-    border-radius: 10px;
-    border-color: maroon;
-    width: 120px;
-    height: 120px;
-  }
-  .crafter-item-image{
-    min-width: 100px;
-    min-height: 100px;
-    max-width: 100px;
-    max-height: 100px;
-  }
 
-  .crafter-item-list-frame{
-    padding: 10px;
-    width: 100%-120;
-    border-bottom: 5px;
-    border-top: 5px;
-    border-style: solid none solid none;
-    border-radius: 10px;
-    border-color: maroon;
-    
-  }
-  .crafter-item-list{
-    
-    min-width: 330px;
-    max-width: 330px;
-    background-color:azure ;
-    color:dimgrey;
-    font-weight: lighter;
-  }
-  .crafter-item-description{
-    padding: 10px;
-    border-bottom: 5px;
+.crafter-item-image-list-frame {
+  border-bottom: 5px solid maroon;
+  border-top: 5px solid maroon;
+  border-radius: 10px;
+  border-color: maroon;
+  border-collapse: separate !important;
+  margin-top: 5px;
+  margin-bottom: 5px;
+
+
+}
+
+.crafter-item-image-frame {
+
+  padding: 10px;
+  width: 120px;
+  height: 120px;
+  vertical-align: top;
+}
+
+.crafter-item-image {
+  min-width: 100px;
+  min-height: 100px;
+  max-width: 100px;
+  max-height: 100px;
+  padding: 2px;
+  border: 5px groove;
+
+
+}
+
+.crafter-item-list-frame {
+  width: 100%;
+  border-bottom: 5px;
   border-top: 5px;
   border-style: solid none solid none;
   border-radius: 10px;
   border-color: maroon;
-    background-color: cornsilk;
-    color: darkslategray;
-    height: fit-content;
-    width:100%;
-  }
-  .crafter-craftingmenu-parsed-heading{
-    width: 75px;
-    padding: 5px;
-    color: maroon;
-    
+  padding: 5px 15px !important;
+  margin-top: 5px;
+  margin-bottom: 5px;
 
-  }
-  .crafter-craftingmenu-parsed-heading-label{
-    width: 60px;
-    padding: 8px;
-    color: black;
-    font-weight: bold;
+}
 
-  }
+.crafter-item-list {
+
+  min-width: 550px;
+  max-width: 550px;
+  background-color: azure;
+  color: black;
+  font-weight: bold;
+  display: flex;
+}
+
+.crafter-item-description-frame {
+  padding: 10px;
+  border-bottom: 5px;
+  border-top: 5px;
+  border-style: solid none solid none;
+  border-radius: 10px;
+  border-color: maroon;
+  background-color: cornsilk;
+  color: darkslategray;
+ 
+  width: 100%;
+  height: 240px;
+  
+}
+.crafter-item-description-frame-frame {
+  height: 200px;
+  
+  
+}
+
+.crafter-item-description {
+  overflow-y: auto;
+  height: 95%;
+  padding-right: 10px;
+  
+}
+
+.crafter-craftingmenu-parsed-heading {
+  width: 75px;
+  padding: 5px;
+  color: maroon;
+
+
+}
+
+.crafter-craftingmenu-parsed-heading-label {
+  width: 60px;
+  padding: 8px;
+  color: black;
+  font-weight: bold;
+
+}
+
+.crafter-select-option {
+  display: flex !important;
+  padding: 2px 25px;
+
+}
+
+.crafter-select-option-selected {
+  display: flex !important;
+  padding: 3px 0px;
+  font-weight: bold;
+  color: black;
+}
