@@ -25,6 +25,17 @@ class Crafter {
      * @property {Object} Component - an object that contains what kind of materials can be used
      * @property {string} craftingTime - time required to craft item
      * @property {string} difficulty - Either a check needed or a profeciency needed
+     * 
+     * <Recipe>
+     * <Profession>
+     * <Component>
+     * <Time>
+     * <Difficulty>
+     * 
+     * 
+     * 
+     * 
+     * 
      */
 
     /**
@@ -36,26 +47,27 @@ class Crafter {
      * @property {int} value - the cost of the component in GP
      * @property {int} quantity - the number of items to satisfy the recipe 
      * @property {boolean} isComponent - true for compoenents
+     * 
+     * 
+     * 
+     * 
      */
 
-     static cptHook(){
-        CRAFTER.LOG(false, "Hooked");
-        }
-
+    
     static initialize() {
          this.recipeMenu = new RecipeMenu();
          this.craftingMenu = new CraftingMenu();
          
          }
-    static setInitialFormData(craftingMenu){
-        this.craftingMenu.formData = {
-            item: RecipeData.itemFromName("Potion of Healing"),
-            books: RecipeData.findBooks("Book"),
-            recipies: RecipeData.findRecipes("TestBook", "(Recipe)"),
-            bookName: "TestBook",
-        }
-        Crafter.log(false, craftingMenu.formData)
-    }
+    // static setInitialFormData(craftingMenu){
+    //     this.craftingMenu.formData = {
+    //         item: RecipeData.itemFromName("Potion of Healing"),
+    //         books: RecipeData.findBooks("Book"),
+    //         recipies: RecipeData.findRecipes("TestBook", "(Recipe)"),
+    //         bookName: "TestBook",
+    //     }
+    //     Crafter.log(false, craftingMenu.formData)
+    // }
 
 
 
@@ -63,7 +75,7 @@ class Crafter {
     static renderJournalDirectory(app, html)
    {
     if ((game.user.isGM)){
-        const button = $(`<button class="recipe-button" width = "100" align = left>Recipe Menu</button>`);
+        const button = $(`<button class="crafter-recipe-button">Recipe Menu</button>`);
 
          let footer = html.find('.directory-footer');
          if (footer.length === 0)
@@ -81,7 +93,7 @@ class Crafter {
         }
 
         
-            const button2 = $(`<button class="crafter-button"  width = "100" align = right>Crafting Menu</button>`);
+            const button2 = $(`<button class="crafter-crafter-button"  width = "100" align = right>Crafting Menu</button>`);
     
              let footer = html.find('.directory-footer');
              if (footer.length === 0)
@@ -93,7 +105,7 @@ class Crafter {
     
               button2.click(() =>
              {  
-                 Crafter.setInitialFormData(Crafter.craftingMenu);
+              //   Crafter.setInitialFormData(Crafter.craftingMenu);
                 Crafter.craftingMenu.render(true);
              }); 
             
@@ -129,8 +141,6 @@ Hooks.once('devModeReady', ({
 
 Hooks.on('renderJournalDirectory', Crafter.renderJournalDirectory);
 
-
-
   Hooks.once('init', () => {
     Crafter.initialize();
   });
@@ -164,7 +174,12 @@ async function createRecipe(book, targetItem, materialType, profession, time, di
 
 
 class RecipeData {
-   
+    static RECIPE = '&lt;Recipe&gt;';
+    static PROFESSION = '&lt;Profession&gt;';
+    static COMPONENT = '&lt;Component&gt;';
+    static TIME = '&lt;Time&gt;';
+    static DIFFICULTY = '&lt;Difficulty&gt;';
+
 
         //returns the description of an item by searching for an exact name
     static descriptionFromName(name) {
@@ -236,24 +251,79 @@ class RecipeData {
     }
 
     static recipeTagger(professionType, craftingTime, difficulty, component){
-        let build = [];
-        build.push('<br>')
-        build.push('@'+component+'<br>@')
-        build.push(professionType+'<br>@');
-        build.push(craftingTime+'<br>@');
+       /*  let build = [];
+        build.push(this.RECIPE);
+        build.push(component);
+        build.push(professionType);
+        build.push(craftingTime);
         build.push(difficulty);
-    
+  
         let tags = "";
         for (let i = 0; i < build.length; i++) {
             tags = tags.concat(build[i]);
             
-        }
+        } */
+        let linebreak = "<br>";
+        let tags = linebreak +
+        this.RECIPE + 
+        linebreak + this.PROFESSION + 
+        linebreak + professionType +
+        linebreak + this.COMPONENT + 
+        linebreak + component + 
+        linebreak + this.TIME +
+        linebreak + craftingTime +
+        linebreak + this.DIFFICULTY +
+        linebreak + difficulty;
+
+
 
         return tags;
 
     }
+    //takes in book actor name and recipe item name
+    static recipeParser(book, item){
+        book = game.actors.getName(book);
+        item = book.data.items.getName(item);
+        let desc = item.data.data.description.value;
+        let parsedItem = {
+            name: item.name,
+            book: book.name,
+            profession: desc.substring(desc.indexOf(this.PROFESSION)+this.PROFESSION.length+6,desc.indexOf(this.COMPONENT)-6),
+            component: desc.substring(desc.indexOf(this.COMPONENT)+this.COMPONENT.length+6,desc.indexOf(this.TIME)-6),
+            time: desc.substring(desc.indexOf(this.TIME)+this.TIME.length+6,desc.indexOf(this.DIFFICULTY)-6),
+            difficulty: desc.substring(desc.indexOf(this.DIFFICULTY)+this.DIFFICULTY.length+6,desc.length -4),
+            baseDesc: desc.substring(0, desc.indexOf(this.RECIPE))
+            
+        }
+        return parsedItem;
+
+         //let prof =  desc.substring(desc.indexOf(this.PROFESSION)+this.PROFESSION.length+6,desc.indexOf(this.COMPONENT)-6);
+        // let compon =  desc.substring(desc.indexOf(this.COMPONENT)+this.COMPONENT.length+6,desc.indexOf(this.TIME)-6);
+        // let time =  desc.substring(desc.indexOf(this.TIME)+this.TIME.length+6,desc.indexOf(this.DIFFICULTY)-6);
+        // let diff =  desc.substring(desc.indexOf(this.DIFFICULTY)+this.DIFFICULTY.length+6,desc.length -4);
+         //desc.indexOf(this.PROFESSION)+this.PROFESSION.length;
+       //  Crafter.log(false, pos1);
+       //  Crafter.log(false, pos2);
+       //  Crafter.log(false, pos3);
+         //Crafter.log(false, pos4);
+       
+
+
+
+//<p><br />&lt;Recipe&gt;<br />&lt;Profession&gt;<br />Herbalism<br />&lt;Component&gt;<br />Healing Herb<br />&lt;Time&gt;<br />12 Hours<br />&lt;Difficulty&gt;<br />DC = 15</p>
+
+
+    }
+
+
+
+
+    
 
 }
+
+
+
 class CraftingMenu extends FormApplication{
     static get defaultOptions() {
         const defaults = super.defaultOptions;
@@ -263,13 +333,19 @@ class CraftingMenu extends FormApplication{
             submitOnChange: true,
             height: '700',
             width: '500',
+            resizable: true,
             id: 'crafter',
             submitOnChange: true,
             template: Crafter.TEMPLATES.CRAFTING,
             title: 'Crafting Menu',
-            currentItem: 'Potion of Healing',
+            currentItem: '(Recipe)Potion of Healing',
             currentBook: "TestBook",
             recipeIndex: '1',
+            profession: 'Test Prof',
+            component: 'Test Comp',
+            time: 'Test Time',
+            difficulty: 'Test Diff',
+            baseDesc: 'base desc',
             
             
      
@@ -279,10 +355,11 @@ class CraftingMenu extends FormApplication{
         return mergedOptions;
 
     }
-
-//initial and submit
+    
+    //initial and submit
     getData(options) {
-      Crafter.log(false, "Get Data")
+        Crafter.log(false, "Get Data")
+        let parsedItem = RecipeData.recipeParser(options.currentBook, options.currentItem);
 
 
         return {
@@ -291,30 +368,25 @@ class CraftingMenu extends FormApplication{
             recipies: RecipeData.findRecipes(options.currentBook, "(Recipe)"),
             selectedBook: options.currentBook,
             recipeIndex: options.recipeIndex,
+            profession: parsedItem.profession,
+            component: parsedItem.component,
+            time: parsedItem.time,
+            difficulty: parsedItem.difficulty,
+            baseDesc: parsedItem.baseDesc,
+            
             
         }
         
-    }
-
+    }  
     activateListeners(html) {
         super.activateListeners(html);
         html.on('click', "[data-action]", this._handleButtonClick.bind(this));
       }
-    
 
     async _updateObject(event, formData) {
         Crafter.log(false, event.type);
-     //   if(!formData.bookName){
-      //      formData.bookName = "TestBook";
-      //  }
-        
-       // this.currentItem = RecipeData.itemFromName(this.currentItem);
-      //  this.books =  RecipeData.findBooks("Book");
-        
-        
-       
 
-
+        //switches the selected Item and book
         if (event.type === "change"){
             const caller = event.target.id;
             switch(caller){
@@ -338,9 +410,7 @@ class CraftingMenu extends FormApplication{
 
         }
 
-
-
-
+        //needs to be changed to craft items
         if (event.type === "submit") {
             const caller = event.submitter.value;
             switch (caller) {
@@ -367,42 +437,41 @@ class CraftingMenu extends FormApplication{
             }
         }
 
-      
-
 
     }
 
     async _handleButtonClick (event){
-        const clickedElement = $(event.currentTarget);
-        const action = clickedElement.data().action;
-        const toDoId = clickedElement.parents('[data-todo-id]')?.data()?.todoId;
-        if(action){
+        // const clickedElement = $(event.currentTarget);
+        // const action = clickedElement.data().action;
+        // const toDoId = clickedElement.parents('[data-todo-id]')?.data()?.todoId;
+        //I think this does nothing
+    //     if(action){
                
-        switch(action){
-            case 'create': {
-                await Crafter.log(false, 'Create',action)
-                this.currentItem = "Healing Herbs";
-                this.render();
-                break;
-            }
-            case 'delete':{
-                await Crafter.log(false, 'Delete ',action)
-                this.currentItem = "Dagger";
-                this.render();
-                break;
-            }
-            case 'createRecipe':{
-                createRecipe('[book-name]', '[item.name]');
-                this.render();
+    //     switch(action){
+    //         case 'create': {
+    //             await Crafter.log(false, 'Create',action)
+    //             this.currentItem = "Healing Herbs";
+    //             this.render();
+    //             break;
+    //         }
+    //         case 'delete':{
+    //             await Crafter.log(false, 'Delete ',action)
+    //             this.currentItem = "Dagger";
+    //             this.render();
+    //             break;
+    //         }
+    //         case 'createRecipe':{
+    //             createRecipe('[book-name]', '[item.name]');
+    //             this.render();
 
-            }
+    //         }
             
-            default :
-                Crafter.log(false, 'Invalid action detected ',action)
-            this.render();
+    //         default :
+    //             Crafter.log(false, 'Invalid action detected ',action)
+    //         this.render();
 
-        }
-    }
+    //     }
+    // }
 
 
     }  
@@ -459,6 +528,7 @@ class RecipeMenu extends FormApplication {
                     Crafter.log(false, "Creating Recipe", formData)
                     if (formData.bookName && this.currentItem) {
                         Crafter.log(false, "Crafting is Ready");
+                        ui.notifications.info("Crafting Recipe for "+this.currentItem + " on Book "+ formData.bookName);
                         createRecipe(formData.bookName, this.currentItem, formData.material, formData.profession, formData.time, formData.difficulty);
                     } else {
                         Crafter.log(false, "Crafting Failed", formData.bookName, this.currentItem.name)
@@ -513,31 +583,31 @@ class RecipeMenu extends FormApplication {
     
 
 }
+//no longer used
+// Handlebars.registerHelper("hbGet", function(searchType, key) {
 
-Handlebars.registerHelper("hbGet", function(searchType, key) {
-
-    switch (searchType){
-        case "allBooks":{
-            bookObj = game.actors.filter(i =>i.name.includes(key))
-            let books = [];
-            for (let i = 0; i < bookObj.length; i++){             
-            books.push(bookObj[i].name);
-            }
-            return books;
-        }
+//     switch (searchType){
+//         case "allBooks":{
+//             bookObj = game.actors.filter(i =>i.name.includes(key))
+//             let books = [];
+//             for (let i = 0; i < bookObj.length; i++){             
+//             books.push(bookObj[i].name);
+//             }
+//             return books;
+//         }
             
                 
             
              
         
-        case "filterItems":{
+//         case "filterItems":{
 
-        }
-        default:{
-            return "No search available"
-        }
-    }
+//         }
+//         default:{
+//             return "No search available"
+//         }
+//     }
 
  
-  });
+//   });
  

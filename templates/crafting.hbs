@@ -1,50 +1,49 @@
-<form id="recipeMenu">
+<form id="craftingmenu" class="crafter-crafting-menu">
  
-  
-  
 
-
-  <div>
-    <h1>{{item.name}}</h1>
+  <div class="crafter-crafting-item-name">
+    {{item.name}}
 
   </div>
   <div>
-    <table cellpadding="10">
-      <thead height="20"></thead>
+    <table class="crafter-item-image-list-frame">
+      <thead></thead>
       <tbody>
-        <tr>
-          <td style="width: 100px;">
-            <img src="{{item.img}}" height="100" width="100">
+        <tr >
+          <td>
+            <img src="{{item.img}}" class="crafter-item-image">
           </td>
-          
-          <td style="width: 100%-100">
-            <select id="selectedItem" name="selectedItem" size="10" multiple="">
-              <option value="" selected="selected" index = {{recipeIndex}}>{{item.name}}</option>
-           {{#each recipies}}
-            <option value= "{{this}}" index={{@index}} name = "{{this}}"> {{this}}</option>
-
-           {{/each}}
+    
+          <td>
+            <select class="crafter-item-list" id="selectedItem" name="selectedItem" size="10" multiple="">
+              <option value="" selected="selected" index={{recipeIndex}}>{{item.name}}</option>
+              {{#each recipies}}
+              <option value="{{this}}" index={{@index}} name="{{this}}"> {{this}}</option>
+    
+              {{/each}}
             </select>
           </td>
-          
+    
         </tr>
-        
+    
       </tbody>
     </table>
+    <div class="crafter-item-description">
     <table>
       <tr>
-        <td>{{{item.data.data.description.value}}}</td>
+        <td>{{{baseDesc}}}</td>
       </tr>
     </table>
-
+</div>
   </div>
-  <table cellpadding = "10">
+  <table>
     <thead><h2>Options</h2></thead>
     <tbody>
       <tr>
-        <td width="40">
+        <td class="crafter-craftingmenu-parsed-heading-label">
           <Strong>Book Name</Strong>
         </td>
+        <td class ="crafter-craftingmenu-parsed-heading"></td>
         <td>
           <select name="bookName" id="changeBook" value="changeBook" aria-placeholder="Bookname">
             <option value="" selected="selected" >{{selectedBook}}</option>
@@ -56,33 +55,37 @@
         </td>
       </tr>
       <tr>
-        <td width="40">
-          <Strong>Material Type</Strong>
+        <td class="crafter-craftingmenu-parsed-heading-label">
+          Profession
         </td>
+        <td class ="crafter-craftingmenu-parsed-heading">{{profession}}</td>
         <td>
           <input type="text" name = "material"  data-dtype="String" placeholder="Material Type">
         </td>
       </tr>
       <tr>
-        <td width="40">
-          <Strong>Profession Type</Strong>
+        <td class="crafter-craftingmenu-parsed-heading-label">
+          Component Type
         </td>
+        <td class ="crafter-craftingmenu-parsed-heading">{{component}}</td>
         <td>
           <input type="text" name = "profession"  data-dtype="String" placeholder="Profession Type">
         </td>
       </tr>
       <tr>
-        <td width="40">
-          <Strong>Time</Strong>
+        <td class="crafter-craftingmenu-parsed-heading-label">
+          Time
         </td>
+        <td class ="crafter-craftingmenu-parsed-heading">{{time}}</td>
         <td>
           <input type="text" name = "time"  data-dtype="String" placeholder="Crafting Time">
         </td>
       </tr>
       <tr>
-        <td width="40">
-          <Strong>Difficulty</Strong>
+        <td class="crafter-craftingmenu-parsed-heading-label">
+          Difficulty
         </td>
+        <td class ="crafter-craftingmenu-parsed-heading">{{difficulty}}</td>
         <td>
           <input type="text" name = "difficulty"  data-dtype="String" placeholder="Crafting Difficulty">
         </td>

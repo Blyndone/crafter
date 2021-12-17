@@ -1,17 +1,113 @@
-.crafter-button {
+.crafter-crafter-button {
     background: transparent;
     padding: 0;
     color: white;
     line-height: normal;
     border: 0;
-    align-self: center;
+    align-self: right;
+    width: 100%;
+    height: 25px;
+
   }
-  
-  .todo-list-icon-button > i {
-    margin-right: 0;
+
+  .crafter-recipe-button {
+    background: transparent;
+    padding: 0;
+    color: white;
+    line-height: normal;
+    border: 0;
+    align-self: left;
+    width: 100%;
+    height: 25px;
+
   }
+
+  .crafter-crafting-menu{
+    height:fit-content;
+  }
+  .crafter-crafting-item-name{
+  color: black;
+  padding: 10px;
+  border-bottom: 5px;
+  border-top: 5px;
+  border-style: solid none solid none;
+  border-radius: 10px;
+  border-color: maroon;
+  font-weight: bolder;
+  font-family: serif;
+  font-size: 30px;
   
-  .todo-list-icon-button:hover, .todo-list-icon-button:focus {
-    box-shadow: none;
-    text-shadow: 0 0 5px red;
+ 
+  }
+  .crafter-item-image-list-frame{
+    border-bottom: 5px solid maroon;
+    border-top: 5px solid maroon;
+    border-radius: 10px;
+    border-color: maroon;
+    border-collapse: separate !important;
+  
+
+}
+  .crafter-item-image-frame{
+    
+    padding: 10px;
+    border-right: 5px solid maroon;
+    border-bottom: 5px;
+    border-top: 5px;
+    border-style: solid none solid none;
+    border-radius: 10px;
+    border-color: maroon;
+    width: 120px;
+    height: 120px;
+  }
+  .crafter-item-image{
+    min-width: 100px;
+    min-height: 100px;
+    max-width: 100px;
+    max-height: 100px;
+  }
+
+  .crafter-item-list-frame{
+    padding: 10px;
+    width: 100%-120;
+    border-bottom: 5px;
+    border-top: 5px;
+    border-style: solid none solid none;
+    border-radius: 10px;
+    border-color: maroon;
+    
+  }
+  .crafter-item-list{
+    
+    min-width: 330px;
+    max-width: 330px;
+    background-color:azure ;
+    color:dimgrey;
+    font-weight: lighter;
+  }
+  .crafter-item-description{
+    padding: 10px;
+    border-bottom: 5px;
+  border-top: 5px;
+  border-style: solid none solid none;
+  border-radius: 10px;
+  border-color: maroon;
+    background-color: cornsilk;
+    color: darkslategray;
+    height: fit-content;
+    width:100%;
+  }
+  .crafter-craftingmenu-parsed-heading{
+    width: 75px;
+    padding: 5px;
+    color: maroon;
+    
+
+  }
+  .crafter-craftingmenu-parsed-heading-label{
+    width: 60px;
+    padding: 8px;
+    color: black;
+    font-weight: bold;
+
   }

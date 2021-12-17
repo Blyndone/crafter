@@ -20,7 +20,7 @@
         }
       ],
       "styles": [
-        "styles/todo-list.css"
+        "styles/crafter.css"
       ],
       "socket": true,
       "manifest": "https://raw.githubusercontent.com/Blyndone/crafter/development/module.json",
