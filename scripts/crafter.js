@@ -590,12 +590,50 @@ class RecipeMenu extends FormApplication {
 
 }
 
-Handlebars.registerHelper('isdefined', function (value, value2) {
-    Crafter.log(false, "1"+value);
-    Crafter.log(false, "2"+value2);
+Handlebars.registerHelper('isselected', function (value) {
+
     value2 = Crafter.craftingMenu.options.recipeIndex;
-    Crafter.log(false, "2"+value2);
     return value == value2;
+  });
+
+  Handlebars.registerHelper("color", function(value, options) {
+    
+    let color = game.items.getName(value).data.data.rarity;
+    Crafter.log(false, color)
+    Crafter.log(false, color)
+    switch(color)
+    {
+        case 'common':{
+            return "grey";
+        }
+        case 'uncommon':{
+            return "green";
+        }
+        case 'rare':{
+            return "blue";
+        }
+        case 'veryRare':{
+            return "purple";
+        }
+        case 'legendary':{
+            return "orange";
+        }
+        case 'artifact':{
+            return "hotpink"
+        }
+        default: {
+            return "teal";
+        }
+
+
+    }
+
+
+
+
+
+
+    
   });
 
 // Handlebars.registerHelper("HBTEST", function(object, key) {

@@ -1,4 +1,28 @@
 <form id="craftingmenu" class="crafter-crafting-menu">
+  <div >
+    <table class="crafter-item-smallcard-frame" style="border: 4px groove {{#color currentItemRaw}}{{/color}}">
+      <tr>
+        <td style ="width:55px">
+        <img src="{{item.img}}" class="crafter-item-smallcard-item"  style="border: 4px solid {{#color currentItemRaw}}{{/color}}" >
+        </td>
+        <td class="crafter-item-smallcard-name" >
+          {{currentItemRaw}}
+        </td>
+      </tr>
+    </table>
+  </div>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   <div class="crafter-crafting-item-name">
     {{currentItemRaw}}
 
@@ -13,10 +37,10 @@
           <td>
             <select class="crafter-item-list" id="selectedItem" name="selectedItem" size="10" multiple="">
              {{! <option class="crafter-select-option-selected" value="" selected="selected" index={{recipeIndex}}>
-                ---{{item.name}}---</option>
+               {{! ---{{item.name}---</option> --}}
               {{#each recipies}}
 
-              {{#if (isdefined @index XXX)}}
+              {{#if (isselected @index)}}
               <option class="crafter-select-option-selected" value="{{this}}" selected="selected" index={{@index}} name="{{this}}"> {{this}}</option>
               {{else}}
               <option class="crafter-select-option" value="{{this}}" index={{@index}} name="{{this}}"> {{this}}</option>
@@ -31,11 +55,11 @@
       </tbody>
     </table>
     </div>
-    <div class="crafter-item-description-frame">
+    <div class="crafter-item-description-frame" style="border-color: {{#color currentItemRaw}}{{/color}}">
     <table>
       <tr>
         <td class="crafter-item-image-frame">
-            <img src="{{item.img}}" class="crafter-item-image" >
+            <img src="{{item.img}}" class="crafter-item-image" style="border: 4px solid {{#color currentItemRaw}}{{/color}}" >
           </td>
           
         <td class="crafter-item-description-frame-frame"><div class="crafter-item-description">

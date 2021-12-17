@@ -1,3 +1,5 @@
+
+
 select option {
   background: black; 
   color: black; 
@@ -100,8 +102,9 @@ select option:active{
   min-height: 100px;
   max-width: 100px;
   max-height: 100px;
-  padding: 2px;
-  border: 5px groove;
+  padding: 0px;
+  border-radius: 15px;
+  
 
 
 }
@@ -135,10 +138,8 @@ select option:active{
   border-top: 5px;
   border-style: solid none solid none;
   border-radius: 10px;
-  border-color: maroon;
   background-color: cornsilk;
   color: darkslategray;
- 
   width: 100%;
   height: 240px;
   
@@ -184,3 +185,45 @@ select option:active{
   font-weight: bold;
   color: black;
 }
+
+
+.crafter-item-smallcard-frame{  
+  width: 180px;
+  height: 70px;
+  padding: 0px;
+  border: 4px solid red;
+  border-radius: 6px;
+  border-collapse: separate !important;
+  border-spacing: 0
+  
+  
+  
+  
+  }
+  
+  .crafter-item-smallcard-item{  
+    min-width: 55px;
+    min-height: 55px;
+    max-width: 50px;
+    max-height: 50px;
+    padding: 0px;
+    border: 4px groove red;
+    border-radius: 10px;
+  vertical-align: middle;
+  
+  
+  
+  
+  }
+  
+  .crafter-item-smallcard-name{  
+  width: auto;
+  padding: 5px 10px;
+  color: black;
+  font-weight: bold;
+  text-align: left;
+  }
+
+  
+  
+  
