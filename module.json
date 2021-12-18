@@ -19,9 +19,27 @@
           "path": "languages/en.json"
         }
       ],
+      "packs": [
+        {
+            "name": "crafter-components",
+            "label": "Crafting Components",
+            "path": "packs/crafter-components.db",
+            "entity": "Item",
+            "module": "crafter"
+        },
+        {
+          "name": "crafter-recipes",
+          "label": "Crafting Recipies",
+          "path": "packs/crafter-recipes.db",
+          "entity": "Item",
+          "module": "crafter"
+      }       
+          ]
+        ,
       "styles": [
         "styles/crafter.css"
       ],
+      
       "socket": true,
       "manifest": "https://raw.githubusercontent.com/Blyndone/crafter/development/master.json",
       "download": "https://github.com/Blyndone/crafter/archive/refs/heads/master.zip"
