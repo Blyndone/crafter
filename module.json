@@ -23,6 +23,6 @@
         "styles/crafter.css"
       ],
       "socket": true,
-      "manifest": "https://raw.githubusercontent.com/Blyndone/crafter/development/module.json",
-      "download": "https://github.com/Blyndone/crafter/archive/refs/heads/development.zip"
+      "manifest": "https://raw.githubusercontent.com/Blyndone/crafter/development/master.json",
+      "download": "https://github.com/Blyndone/crafter/archive/refs/heads/master.zip"
   }
