@@ -1,25 +1,5 @@
-<form id="craftingmenu" class="crafter-crafting-menu">
-  <div >
-    <table class="crafter-item-smallcard-frame" style="border: 4px groove {{#color currentItemRaw}}{{/color}}">
-      <tr>
-        <td style ="width:55px">
-        <img src="{{item.img}}" class="crafter-item-smallcard-item"  style="border: 4px solid {{#color currentItemRaw}}{{/color}}" >
-        </td>
-        <td class="crafter-item-smallcard-name" >
-          {{currentItemRaw}}
-        </td>
-      </tr>
-    </table>
-  </div>
-  
-  
-  
-  
-  
-  
-  
-  
-  
+<form id="craftingMenu">
+
   
   
   
@@ -45,6 +25,7 @@
               {{else}}
               <option class="crafter-select-option" value="{{this}}" index={{@index}} name="{{this}}"> {{this}}</option>
               {{/if}}
+
               {{/each}}
         
             </select>
@@ -69,7 +50,36 @@
       </tr>
     </table>
 </div>
-  
+<div>
+  <h2>Components</h2>
+</div>  
+<table style="max-width: 500px;" style="align-self: center;"  >
+<tr>
+    {{#each component}}<form id="craftingmenu" class="crafter-crafting-menu">
+     <td>
+      <table class="crafter-item-smallcard-frame" style="border: 4px groove {{#color (complookupname this) }}{{/color}}">
+      <tr>
+        <td style ="width:55px">
+          <div class="crafter-item-container-fontframe">
+        <img src="{{#complookupimg @this}}{{this}}{{/complookupimg}}" class="crafter-item-smallcard-item"  style="border: 4px solid {{#color (complookupname this)}}{{/color}}" >
+        <div class="crafter-item-container-font">{{#compcount @this}}{{/compcount}}/1</div>
+        </div>
+        </td>
+        <td class="crafter-item-smallcard-name" >
+          {{this}}
+        </td>
+      </tr>
+    </table>
+    </td>
+    {{#if (eq @index 2)}}</tr><tr>{{/if}}
+  {{/each}}
+</tr>
+</table>
+
+
+
+
+
   <table>
     <thead><h2>Options</h2></thead>
     <tbody>
@@ -132,16 +142,13 @@
       <tr>
         <td><input type="text" name="submitText" id="inputText"  data-dtype="String" placeholder={{#if item.name}}{{{item.name}}}{{else}}"Search for an Item"{{/if}}></td>
        
-        <td><button type="submit" value="changeItem" name = "Sub">Submit</button></td>
+        <td><button type="submit" value="craft" name = "Sub">Submit</button></td>
         <td><button type="submit" value="createRecipe" name = "Sub">Create Recipe</button></td> 
       </tr>
     </tbody>
   </table>
  
 </form>
-
-
-
 
 
 
