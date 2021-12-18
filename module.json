@@ -14,11 +14,11 @@
   ],
   "packs": [
     {
-        "name": "spell-animations",
-        "label": "Spell Animations",
+        "name": "crafter-components",
+        "label": "Crafting Components",
         "path": "packs/crafter-components.db",
-        "entity": "Macro",
-        "module": "otigons_animation_macros"
+        "entity": "Item",
+        "module": "crafter"
 
     },
     {
