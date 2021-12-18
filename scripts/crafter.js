@@ -166,6 +166,36 @@ async function createRecipe(book, targetItem, materialType, profession, time, di
     return item;
     }
 
+async function craftFromRecipe(book, crafter, recipe) {
+    book = game.actors.getName(book);
+    crafter = game.actors.getName(crafter);
+    recipe = book.data.items.getName(recipe);
+    let desc = recipe.data.data.description.value;
+    desc = desc.substring(0, desc.indexOf(RecipeData.RECIPE));
+    let name =recipe.name.substring(8);
+    let protoItem = duplicate(recipe);
+    protoItem._id = foundry.utils.randomID(16);
+    await crafter.createEmbeddedDocuments("Item", [protoItem]);
+    let item = crafter.data.items.find(i=>i.name === recipe.name);
+    
+    let updates = {
+        _id: item._id,
+        name: name,
+        data: {
+            description: {
+                value: desc,
+            }
+        }
+    }
+    await crafter.updateEmbeddedDocuments("Item", [updates]);
+    return item;
+    }
+
+
+
+
+
+
 
 class RecipeData {
     static RECIPE = '&lt;Recipe&gt;';
@@ -312,10 +342,37 @@ class RecipeData {
 
 
     }
+static compCount(value){
+    //Crafter.craftingMenu.options.compInv =[];
+    const inv = Crafter.craftingMenu.options.compInv;
+              if (game.actors.getName("TestCrafter") && game.actors.getName("TestCrafter").items.getName(value)) {
+                  //const inv = Crafter.craftingMenu.options.compInv;
+                  const items = game.actors.getName("TestCrafter").items.filter(i => i.name == value);
+                  let p = true;
 
+                  for (let i = 0; i < items.length; i++) {
+                      p = true;
+                      for (let j = 0; j < inv.length; j++) {
+                          if (inv[j].id == items[i].id) {
+                              p = false;
+                          }
+                      }
+                      if (p != false) {
+                          Crafter.craftingMenu.options.compInv.push(items[i])
+                      }
+                  }
 
+                  let num = 0;
+                  for (let i = 0; i < items.length; i++) {
+                      num += items[i].data.data.quantity;
+                  }
+                  return num;
 
+              } else {
+                  return "0";
+              }
 
+            }
     
 
 }
@@ -329,7 +386,7 @@ class CraftingMenu extends FormApplication{
         const overrides = {
             closeOnSubmit: false,
             submitOnChange: true,
-            height: '850',
+            height: '1010',
             width: '600',
             resizable: true,
             id: 'crafter',
@@ -399,6 +456,7 @@ class CraftingMenu extends FormApplication{
                 case 'selectedItem':{
                     this.options.currentItem = event.target.value;
                     this.options.recipeIndex = event.target.selectedIndex;
+                    this.options.compInv= [];
                     this.render();
                 }
                 default:{
@@ -428,8 +486,13 @@ class CraftingMenu extends FormApplication{
                     break;
                 }
                 case 'craft':{
+                    Crafter.craftingMenu.options.compInv =[];
                     let k = true;
                     let c = false;
+                    for (let i = 0; i < this.options.recipeComponents.length; i++) {
+                        RecipeData.compCount(this.options.recipeComponents[i]);
+                        
+                    }
                     for (let i = 0; i < this.options.recipeComponents.length; i++) {
                         c = false;
                         for (let j = 0; j < this.options.compInv.length; j++) {
@@ -442,7 +505,24 @@ class CraftingMenu extends FormApplication{
                     }
                     if (k == true) {
                         ui.notifications.info("Craft  that Bitch!");
-                        Crafter.log(false, k + " k value")
+                        Crafter.log(false, k + " k value");
+                        let item = craftFromRecipe(Crafter.craftingMenu.options.currentBook,  "TestCrafter", Crafter.craftingMenu.options.currentItem);
+                        //if (item){
+                            ui.notifications.info("Delete that shit" + item);
+                            Crafter.log(false, item);
+
+                            for (let i = 0; i < this.options.recipeComponents.length; i++) {
+                                await game.actors.getName("TestCrafter").deleteEmbeddedDocuments("Item", [game.actors.getName("TestCrafter").items.getName(this.options.recipeComponents[i]).id]); 
+                                
+                                //this.options.recipeComponents.splice(this.options.compInv.indexOf(this.options.compInv.find(i=>i.name, this.options.recipeComponents[i])),1)
+
+                            Crafter.log(false, "Deleting "+ this.options.recipeComponents[i])
+                         //   }
+                             this.render();
+
+
+
+                        }
                     }
         
                 } 
@@ -633,33 +713,36 @@ Handlebars.registerHelper('isselected', function (value) {
   };
 
   Handlebars.registerHelper('compcount', function (value) {
+   return RecipeData.compCount(value);
+    
+    ////Crafter.craftingMenu.options.compInv= [];
+    // const inv = Crafter.craftingMenu.options.compInv;
+    //           if (game.actors.getName("TestCrafter") && game.actors.getName("TestCrafter").items.getName(value)) {
+    //               //const inv = Crafter.craftingMenu.options.compInv;
+    //               const items = game.actors.getName("TestCrafter").items.filter(i => i.name == value);
+    //               let p = true;
 
-              if (game.actors.getName("TestCrafter") && game.actors.getName("TestCrafter").items.getName(value)) {
-                  const inv = Crafter.craftingMenu.options.compInv;
-                  const items = game.actors.getName("TestCrafter").items.filter(i => i.name == value);
-                  let p = true;
+    //               for (let i = 0; i < items.length; i++) {
+    //                   p = true;
+    //                   for (let j = 0; j < inv.length; j++) {
+    //                       if (inv[j].id == items[i].id) {
+    //                           p = false;
+    //                       }
+    //                   }
+    //                   if (p != false) {
+    //                       Crafter.craftingMenu.options.compInv.push(items[i])
+    //                   }
+    //               }
 
-                  for (let i = 0; i < items.length; i++) {
-                      p = true;
-                      for (let j = 0; j < inv.length; j++) {
-                          if (inv[j].id == items[i].id) {
-                              p = false;
-                          }
-                      }
-                      if (p != false) {
-                          Crafter.craftingMenu.options.compInv.push(items[i])
-                      }
-                  }
+    //               let num = 0;
+    //               for (let i = 0; i < items.length; i++) {
+    //                   num += items[i].data.data.quantity;
+    //               }
+    //               return num;
 
-                  let num = 0;
-                  for (let i = 0; i < items.length; i++) {
-                      num += items[i].data.data.quantity;
-                  }
-                  return num;
-
-              } else {
-                  return "0";
-              }
+    //           } else {
+    //               return "0";
+    //           }
 
 
 

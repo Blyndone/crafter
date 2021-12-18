@@ -247,3 +247,9 @@ select option:active{
         0 var(--stroke-width) 0 var(--stroke-color),
         0 calc(var(--stroke-width) * -1) 0 var(--stroke-color);
     }
+
+    .crafter-bottom-bar{
+      position:absolute;                 
+                bottom:0;                         
+                right:0;
+    }

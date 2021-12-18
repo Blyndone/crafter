@@ -98,52 +98,15 @@
           {{!<input type="text" name = "bookName"  data-dtype="String" placeholder = "Book Name">--}}
         </td>
       </tr>
-      <tr>
-        <td class="crafter-craftingmenu-parsed-heading-label">
-          Profession
-        </td>
-        <td class ="crafter-craftingmenu-parsed-heading">{{profession}}</td>
-        <td>
-          <input type="text" name = "material"  data-dtype="String" placeholder="Material Type">
-        </td>
-      </tr>
-      <tr>
-        <td class="crafter-craftingmenu-parsed-heading-label">
-          Component Type
-        </td>
-        <td class ="crafter-craftingmenu-parsed-heading">{{component}}</td>
-        <td>
-          <input type="text" name = "profession"  data-dtype="String" placeholder="Profession Type">
-        </td>
-      </tr>
-      <tr>
-        <td class="crafter-craftingmenu-parsed-heading-label">
-          Time
-        </td>
-        <td class ="crafter-craftingmenu-parsed-heading">{{time}}</td>
-        <td>
-          <input type="text" name = "time"  data-dtype="String" placeholder="Crafting Time">
-        </td>
-      </tr>
-      <tr>
-        <td class="crafter-craftingmenu-parsed-heading-label">
-          Difficulty
-        </td>
-        <td class ="crafter-craftingmenu-parsed-heading">{{difficulty}}</td>
-        <td>
-          <input type="text" name = "difficulty"  data-dtype="String" placeholder="Crafting Difficulty">
-        </td>
-      </tr>
+      
     </tbody>
   </table>
+  <div class="crafter-bottom-bar"></div>
   <table>
-    <thead>Search for Item</thead>
+    <thead><h2>Craft Item </h2></thead>
     <tbody>
       <tr>
-        <td><input type="text" name="submitText" id="inputText"  data-dtype="String" placeholder={{#if item.name}}{{{item.name}}}{{else}}"Search for an Item"{{/if}}></td>
-       
-        <td><button type="submit" value="craft" name = "Sub">Submit</button></td>
-        <td><button type="submit" value="createRecipe" name = "Sub">Create Recipe</button></td> 
+        <td><button type="submit" value="craft" name = "Sub" width ="100%">Submit</button></td>
       </tr>
     </tbody>
   </table>
@@ -153,6 +116,7 @@
 
 
 {{!-- 
+<td><input type="text" name="submitText" id="inputText"  data-dtype="String" placeholder={{#if item.name}{{{item.name}{else}"Search for an Item"{/if}></td>
 <form>
   <ul class="todo-list flexcol">
     #each todos
