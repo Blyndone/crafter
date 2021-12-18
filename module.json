@@ -40,6 +40,6 @@
   "styles": [
     "styles/crafter.css"
   ],
-  "manifest": "https://raw.githubusercontent.com/Blyndone/crafter/master/master.json",
+  "manifest": "https://raw.githubusercontent.com/Blyndone/crafter/master/module.json",
   "download": "https://github.com/Blyndone/crafter/archive/refs/heads/master.zip"
 }
