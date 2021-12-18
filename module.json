@@ -12,13 +12,6 @@
   "scripts": [
     "scripts/crafter.js"
   ],
-  "languages": [
-    {
-      "lang": "en",
-      "name": "English",
-      "path": "languages/en.json"
-    }
-  ],
   "packs": [
     {
         "name": "spell-animations",
@@ -36,6 +29,14 @@
       "module": "crafter"
     }
   ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "languages/en.json"
+    }
+  ],
+ 
   "styles": [
     "styles/crafter.css"
   ],
