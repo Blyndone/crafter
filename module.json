@@ -21,11 +21,12 @@
   ],
   "packs": [
     {
-      "name": "crafter-components",
-      "label": "Crafting Components",
-      "path": "packs/crafter-components.db",
-      "entity": "Item",
-      "module": "crafter"
+        "name": "spell-animations",
+        "label": "Spell Animations",
+        "path": "packs/crafter-components.db",
+        "entity": "Macro",
+        "module": "otigons_animation_macros"
+
     },
     {
       "name": "crafter-recipes",
