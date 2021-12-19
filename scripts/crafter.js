@@ -397,11 +397,12 @@ class CraftingMenu extends FormApplication{
             books: RecipeData.findBooks("Book"),
         get currentBook(){return this.books[0]},
         get recipies(){return RecipeData.findRecipes(this.currentBook, "(Recipe)")},
-           //-------Recipe Attributes--------
+     //   get selectedBook(){return this.currentBook},
         get item(){return RecipeData.recipeItemFromName(this.currentBook, this.currentItem)},
+           //-------Recipe Attributes--------
         get currentItem(){return this.recipies[0]},
         get currentItemRaw(){return this.currentItem.slice(8)},
-            recipeIndex: '0',
+            recipeIndex: 0,
             profession: parsedItem.profession,
             component: parsedItem.component,
             time: parsedItem.time,
@@ -412,8 +413,6 @@ class CraftingMenu extends FormApplication{
             compInv: [],
             //-------Individual Component Attributes--------  
             //-------Selections--------                     
-        get selectedBook(){return this.currentBook},
-        get item(){return RecipeData.recipeItemFromName(this.currentBook, this.currentItem)},
             
 
      
@@ -426,16 +425,17 @@ class CraftingMenu extends FormApplication{
 
     }
     
-    //initial and submit
+    //initial and submit  Sends Data to Form
     getData(options) {
-       // Crafter.log(false, "Get Data")
-        let parsedItem = RecipeData.recipeParser(options.currentBook, options.currentItem);
+        Crafter.log(false, "Get Data")
+        
+       let parsedItem = RecipeData.recipeParser(options.currentBook, options.currentItem);
 
         return {
             item: RecipeData.recipeItemFromName(options.currentBook, options.currentItem),
             books: RecipeData.findBooks("Book"),
             recipies: RecipeData.findRecipes(options.currentBook, "(Recipe)"),
-            selectedBook: options.currentBook,
+           //selectedBook: options.currentBook,
             recipeIndex: options.recipeIndex,
             profession: parsedItem.profession,
             component: parsedItem.component,
@@ -443,7 +443,8 @@ class CraftingMenu extends FormApplication{
             difficulty: parsedItem.difficulty,
             baseDesc: parsedItem.baseDesc,
             currentItemRaw: options.currentItem.slice(8),
-            currentItem: options.currentItem
+            currentItem: options.currentItem,
+            currentBook: options.currentBook,
         
             
             
@@ -464,6 +465,8 @@ class CraftingMenu extends FormApplication{
             switch(caller){
                 case 'changeBook':{
                     this.options.currentBook = event.target.value;
+                    this.options.currentItem = RecipeData.findRecipes(event.target.value, "(Recipe)")[0];
+                    this.options.recipeIndex = 0;
                     this.render();
                 }
                 case 'selectedItem':{

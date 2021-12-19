@@ -5,8 +5,6 @@
   
   <div class="crafter-crafting-item-name">
     {{currentItemRaw}}
-
-
   </div>
   <div class="crafter-item-list-frame">
     <table>
@@ -21,7 +19,7 @@
                {{! ---{{item.name}---</option> --}}
               {{#each recipies}}
 
-              {{#if (isselected @index)}}
+              {{#if (eq @index ../recipeIndex)}}
               <option class="crafter-select-option-selected" value="{{this}}" selected="selected" index={{@index}} name="{{this}}"> {{this}}</option>
               {{else}}
               <option class="crafter-select-option" value="{{this}}" index={{@index}} name="{{this}}"> {{this}}</option>
@@ -91,9 +89,11 @@
         <td class ="crafter-craftingmenu-parsed-heading"></td>
         <td>
           <select name="bookName" id="changeBook" value="changeBook" aria-placeholder="Bookname">
-            <option value="" selected="selected" >{{selectedBook}}</option>
+            <option value="{{currentBook}}" selected="selected" ><b>{{currentBook}}</b></option>
          {{#each books}}
+         {{#if (ne this ../currentBook)}}
             <option value= "{{this}}" id={{@index}} name = "{{this}}"> {{this}}</option>
+            {{/if}}
            {{/each}}
           </select>
           {{!<input type="text" name = "bookName"  data-dtype="String" placeholder = "Book Name">--}}
