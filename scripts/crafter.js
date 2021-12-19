@@ -133,7 +133,7 @@ Hooks.once('devModeReady', ({
 
 Hooks.on('renderJournalDirectory', Crafter.renderJournalDirectory);
 
-  Hooks.once('init', () => {
+  Hooks.once('ready', () => {
     Crafter.initialize();
     
   });
@@ -322,7 +322,7 @@ class RecipeData {
             baseDesc: desc.substring(0, desc.indexOf(this.RECIPE))
             
         }
-        Crafter.craftingMenu.options.recipeComponents = parsedItem.component;
+        
         return parsedItem;
 
          //let prof =  desc.substring(desc.indexOf(this.PROFESSION)+this.PROFESSION.length+6,desc.indexOf(this.COMPONENT)-6);
@@ -382,6 +382,7 @@ static compCount(value){
 class CraftingMenu extends FormApplication{
     static get defaultOptions() {
         const defaults = super.defaultOptions;
+        let parsedItem = RecipeData.recipeParser("TestBook", "(Recipe)Potion of Healing");
      
         const overrides = {
             closeOnSubmit: false,
@@ -392,21 +393,34 @@ class CraftingMenu extends FormApplication{
             id: 'crafter',
             template: Crafter.TEMPLATES.CRAFTING,
             title: 'Crafting Menu',
-            currentItem: '(Recipe)Potion of Healing',
-            currentBook: "TestBook",
+           //-------Form Lists Attributes--------            
+            books: RecipeData.findBooks("Book"),
+        get currentBook(){return this.books[0]},
+        get recipies(){return RecipeData.findRecipes(this.currentBook, "(Recipe)")},
+           //-------Recipe Attributes--------
+        get item(){return RecipeData.recipeItemFromName(this.currentBook, this.currentItem)},
+        get currentItem(){return this.recipies[0]},
+        get currentItemRaw(){return this.currentItem.slice(8)},
             recipeIndex: '0',
-            profession: 'Test Prof',
-            component: 'Test Comp',
-            time: 'Test Time',
-            difficulty: 'Test Diff',
-            baseDesc: 'base desc',
+            profession: parsedItem.profession,
+            component: parsedItem.component,
+            time: parsedItem.time,
+            difficulty: parsedItem.difficulty,
+            baseDesc: parsedItem.baseDesc,
+            recipeComponents: parsedItem.component,  //make 2d array for # needed
+            //-------Component Attributes--------            
             compInv: [],
-            recipeComponents: [],
+            //-------Individual Component Attributes--------  
+            //-------Selections--------                     
+        get selectedBook(){return this.currentBook},
+        get item(){return RecipeData.recipeItemFromName(this.currentBook, this.currentItem)},
             
-            
+
      
         };
 
+
+        
         const mergedOptions = foundry.utils.mergeObject(defaults, overrides);
         return mergedOptions;
 
@@ -414,9 +428,8 @@ class CraftingMenu extends FormApplication{
     
     //initial and submit
     getData(options) {
-        Crafter.log(false, "Get Data")
+       // Crafter.log(false, "Get Data")
         let parsedItem = RecipeData.recipeParser(options.currentBook, options.currentItem);
-
 
         return {
             item: RecipeData.recipeItemFromName(options.currentBook, options.currentItem),
@@ -688,11 +701,6 @@ Handlebars.registerHelper('isselected', function (value) {
     return value == value2;
   });
   
-  Handlebars.registerHelper('eq', function (value, value2) {
-
-    
-    return value == value2;
-  });
 
   Handlebars.registerHelper('complookupname', function (value) {
  
