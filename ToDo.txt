@@ -1,0 +1,79 @@
+ToDo list
+
+POC
+    Integrate handlebars main config
+    .css global to local configs
+    .css parenting
+
+User Interface
+    Unified color and look
+    Select box color 
+    Component display fixed size
+    Recipe Quantity
+    Component data  
+        value
+        Icon for Proxies
+        Proxy Text
+    Recipe Data 
+        value
+        required value
+        type
+        Hover item tooltip
+
+    Progress Bar
+
+
+Code goals
+    Rework form saved data
+    Check and verify item integrity
+    Orphan Code clean up
+    Variable standardization
+    Hard strings to localized strings
+    Set globals on global things
+    Rework tagging system
+    Add  verification checks before DB operations
+    figure out html form methods and update triggers
+    GM Connected Check for db operations
+    Checks for Error States
+        No Book/ No Crafter/No Recipies
+    Fix Scroll Jumping
+
+
+
+Features
+    Recipe Quantity => 3/3 
+        Tagging quantities
+    Component Proxies
+    Component Price Requirments
+    Component Drowdown Selector for Proxies
+    Crafting and Book Selector
+    Recipe Item onUse, add Recipe
+    Settings Menu
+        Crafting Checks
+        Component Waste Percentages
+        Gm Confirmation
+        Light/Dark mode
+        Recipe Item Hover tooltip
+
+    Progress Bar
+        Partial Recipe Added
+        Recipe Retagged and ReGenerated
+    Recipe Storage
+        Speed vs Load Size
+        Actor Reliance
+    Disenchant Menu
+        Reverse recipe
+        Component Loss
+        Disenchant to Generic components 
+    
+    
+
+
+Release
+    Code Comments
+    Localization
+    Readme.md 
+    Compendium SRD Full
+    Verify Liscenseing
+    V9 Testing and verification
+
