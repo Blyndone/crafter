@@ -5,6 +5,9 @@
   
   <div class="crafter-crafting-item-name">
     {{currentItemRaw}}
+    
+
+    
   </div>
   <div class="crafter-item-list-frame">
     <table>
@@ -39,7 +42,10 @@
     <table>
       <tr>
         <td class="crafter-item-image-frame">
+              
             <img src="{{item.img}}" class="crafter-item-image" style="border: 4px solid {{#color currentItemRaw}}{{/color}}" >
+            <div class="crafter-item-container-font-recipe">{{#if (eq item.data.data.quantity 1)}}{{else}}{{item.data.data.quantity}}{{/if}}</div>
+            
           </td>
           
         <td class="crafter-item-description-frame-frame"><div class="crafter-item-description">
@@ -52,9 +58,9 @@
 <div>
   <h2>Components</h2>
 </div>  
-<table style="max-width: 500px;" style="align-self: center;"  >
+<table style="max-width: 999px;" style="align-self: center;"  >
 <tr>
-    {{#each component}}<form id="craftingmenu" class="crafter-crafting-menu">
+    {{#each components}}<form id="craftingmenu" class="crafter-crafting-menu">
      <td>
       <table class="crafter-item-smallcard-frame" style="border: 4px groove {{#color (complookupname this) }}{{/color}}">
       <tr>
@@ -70,8 +76,18 @@
       </tr>
     </table>
     </td>
+    
+    
+    
+    
+    
+
+
+
     {{#if (eq @index 2)}}</tr><tr>{{/if}}
+      
   {{/each}}
+  {{#if (numberofcomps2 components)}}<td style ="width:180px"> </td>{{/if}}
 </tr>
 </table>
 
