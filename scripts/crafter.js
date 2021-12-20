@@ -51,15 +51,7 @@ class Crafter {
          this.craftingMenu = new CraftingMenu();
          
          }
-    // static setInitialFormData(craftingMenu){
-    //     this.craftingMenu.formData = {
-    //         item: RecipeData.itemFromName("Potion of Healing"),
-    //         books: RecipeData.findBooks("Book"),
-    //         recipies: RecipeData.findRecipes("TestBook", "(Recipe)"),
-    //         bookName: "TestBook",
-    //     }
-    //     Crafter.log(false, craftingMenu.formData)
-    // }
+
 
 
 
@@ -100,28 +92,7 @@ class Crafter {
               //   Crafter.setInitialFormData(Crafter.craftingMenu);
                 Crafter.craftingMenu.render(true); 
              }); 
-            
-    
-      
-
-   /*    if (!(game.user.isGM && game.settings.get(constants.moduleName, settings.showFolder)))
-      {
-         const folder = Utils.getQuestFolder();
-         if (folder !== void 0)
-         {
-            const element = html.find(`.folder[data-folder-id="${folder.id}"]`);
-            if (element !== void 0)
-            {
-               element.remove();
-            }
-         }
-      } */
    }   
-
-
-
-
-
 
 }
 
@@ -139,8 +110,6 @@ Hooks.on('renderJournalDirectory', Crafter.renderJournalDirectory);
   });
 
  
-
-
 
 
 // book- name of actor to be used as Receipe book, targetItem name of Item to be transformed
@@ -191,11 +160,6 @@ async function craftFromRecipe(book, crafter, recipe) {
     await crafter.updateEmbeddedDocuments("Item", [updates]);
     return item;
     }
-
-
-
-
-
 
 
 class RecipeData {
@@ -286,18 +250,7 @@ class RecipeData {
     }
 
     static recipeTagger(professionType, craftingTime, difficulty, component){
-       /*  let build = [];
-        build.push(this.RECIPE);
-        build.push(component);
-        build.push(professionType);
-        build.push(craftingTime);
-        build.push(difficulty);
-  
-        let tags = "";
-        for (let i = 0; i < build.length; i++) {
-            tags = tags.concat(build[i]);
-            
-        } */
+
         let linebreak = "<br>";
         let tags = linebreak +
         this.RECIPE + 
@@ -334,21 +287,6 @@ class RecipeData {
         }
         
         return parsedItem;
-
-         //let prof =  desc.substring(desc.indexOf(this.PROFESSION)+this.PROFESSION.length+6,desc.indexOf(this.COMPONENT)-6);
-        // let compon =  desc.substring(desc.indexOf(this.COMPONENT)+this.COMPONENT.length+6,desc.indexOf(this.TIME)-6);
-        // let time =  desc.substring(desc.indexOf(this.TIME)+this.TIME.length+6,desc.indexOf(this.DIFFICULTY)-6);
-        // let diff =  desc.substring(desc.indexOf(this.DIFFICULTY)+this.DIFFICULTY.length+6,desc.length -4);
-         //desc.indexOf(this.PROFESSION)+this.PROFESSION.length;
-       //  Crafter.log(false, pos1);
-       //  Crafter.log(false, pos2);
-       //  Crafter.log(false, pos3);
-         //Crafter.log(false, pos4);
-       
-
-
-
-//<p><br />&lt;Recipe&gt;<br />&lt;Profession&gt;<br />Herbalism<br />&lt;Component&gt;<br />Healing Herb<br />&lt;Time&gt;<br />12 Hours<br />&lt;Difficulty&gt;<br />DC = 15</p>
 
 
     }
@@ -394,9 +332,6 @@ class CraftingMenu extends FormApplication{
 
         const defaults = super.defaultOptions;
         let overrides = {
-            // books: RecipeData.findBooks("Book"),
-            // currentBook: this.books[0],
-            // currentItem: this.recipies[0],
             closeOnSubmit: false,
             submitOnChange: true,
             height: '1010',
@@ -409,57 +344,9 @@ class CraftingMenu extends FormApplication{
         }
         if (Crafter.craftingMenu == undefined){
             overrides = foundry.utils.mergeObject(this.SetInitials(), overrides);
-
         }
-
-
-        
-    //     let parsedItem;
-    //     if (Crafter.craftingMenu){
-    //      parsedItem = RecipeData.recipeParser("TestBook", Crafter.craftingMenu.options.currentItem);
-    //     }else{
-    //         let book = RecipeData.findBooks("Book")[0];
-    //         let item = RecipeData.findRecipes("TestBook", "(Recipe)")[0];
-    //     parsedItem = RecipeData.recipeParser("TestBook", item);
-    //     }
-    //     const overrides = {
-    //         books: RecipeData.findBooks("Book"),
-    //         get currentBook(){return this.books[0]},
-    //         get currentItem(){return this.recipies[0]},
-    //         closeOnSubmit: false,
-    //         submitOnChange: true,
-    //         height: '1010',
-    //         width: '600',
-    //         resizable: true,
-    //         id: 'crafter',
-    //         template: Crafter.TEMPLATES.CRAFTING,
-    //         title: 'Crafting Menu',
-                       
-    //     get recipies(){return RecipeData.findRecipes(this.currentBook, "(Recipe)")},
-    //  //   get selectedBook(){return this.currentBook},
-    //     get item(){return RecipeData.recipeItemFromName(this.currentBook, this.currentItem)},
-    //        //-------Recipe Attributes--------
-    //     get currentItemRaw(){return this.currentItem.slice(8)},
-    //         recipeIndex: 0,
-    //     get profession(){return parsedItem.profession},
-    //     get component(){return parsedItem.component},
-    //     get time(){return parsedItem.time},
-    //     get difficulty(){return parsedItem.difficulty},
-    //     get baseDesc(){return parsedItem.baseDesc},
-    //     components: parsedItem.component,  //make 2d array for # needed
-    //         //-------Component Attributes--------            
-    //         compInv: [],
-    //         //-------Individual Component Attributes--------  
-    //         //-------Selections--------                     
-            
-
-     
-        // };
-
-
         
         const mergedOptions = foundry.utils.mergeObject(defaults, overrides);
-    
         return mergedOptions;
 
     }
@@ -497,17 +384,9 @@ class CraftingMenu extends FormApplication{
         super.activateListeners(html);
         html.on('click', "[data-action]", this._handleButtonClick.bind(this));
       }
-//////put all updates here
+
     async _updateObject(event, formData) {
-        Crafter.log(false, event);
-
-
-        
-
-
-
-
-
+       // Crafter.log(false, event);
         //switches the selected Item and book
         if (event.type === "change"){
             const caller = event.target.id;
@@ -533,9 +412,6 @@ class CraftingMenu extends FormApplication{
                         currentItemRaw: String(event.target.value.currentItem).slice(8),
                     }
                     foundry.utils.mergeObject(this.options, updates);
-    
-        
-
                     this.render();
                 }
                 default:{
@@ -547,23 +423,6 @@ class CraftingMenu extends FormApplication{
             const caller = event.submitter.value;
             switch (caller) {
                
-                case 'changeItem': {
-                    this.currentItem = formData.selectedItem;
-                    this.recipies = RecipeData.findRecipes(formData.bookName, "(Recipe)")
-                    this.render();
-                    break;
-                }
-                case 'createRecipe': {
-                    Crafter.log(false, "Creating Recipe", formData)
-                    if (formData.bookName && this.currentItem) {
-                        Crafter.log(false, "Crafting is Ready");
-                        createRecipe(formData.bookName, this.currentItem, formData.material, formData.profession, formData.time, formData.difficulty);
-                    } else {
-                        Crafter.log(false, "Crafting Failed", formData.bookName, this.currentItem.name)
-                    }
-
-                    break;
-                }
                 case 'craft':{
                     Crafter.craftingMenu.options.compInv =[];
                     let k = true;
@@ -616,38 +475,7 @@ class CraftingMenu extends FormApplication{
     async _handleButtonClick (event){
         const clickedElement = $(event.currentTarget);
         const action = clickedElement.data().action;
-       // const toDoId = clickedElement.parents('[data-todo-id]')?.data()?.todoId;
-        
-    //     if(action){
-               
-    //     switch(action){
-    //         case 'create': {
-    //             await Crafter.log(false, 'Create',action)
-    //             this.currentItem = "Healing Herbs";
-    //             this.render();
-    //             break;
-    //         }
-    //         case 'delete':{
-    //             await Crafter.log(false, 'Delete ',action)
-    //             this.currentItem = "Dagger";
-    //             this.render();
-    //             break;
-    //         }
-    //         case 'createRecipe':{
-    //             createRecipe('[book-name]', '[item.name]');
-    //             this.render();
-
-    //         }
-             
-            
-    //         default :
-    //             Crafter.log(false, 'Invalid action detected ',action)
-    //         this.render();
-
-    //     }
-    // }
-
-
+       
     }  
 
     static SetInitials(){
@@ -678,12 +506,6 @@ class CraftingMenu extends FormApplication{
 
 
         }
-
-
-
-        
-        
-    
         return overrides;
 
     }
