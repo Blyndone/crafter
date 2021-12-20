@@ -20,12 +20,12 @@ User Interface
         type
         Hover item tooltip
 
-    Progress Bar
+    Progress Bar   //bones done
     Crafting Menu to UL/LI
 
 
 Code goals
-    Rework form saved data
+    //Rework form saved data
     Check and verify item integrity
     Orphan Code clean up
     Variable standardization

@@ -89,7 +89,7 @@ class Crafter {
     
               button2.click(() =>
              {  
-              //   Crafter.setInitialFormData(Crafter.craftingMenu);
+          
                 Crafter.craftingMenu.render(true); 
              }); 
    }   
@@ -114,8 +114,7 @@ Hooks.on('renderJournalDirectory', Crafter.renderJournalDirectory);
 
 // book- name of actor to be used as Receipe book, targetItem name of Item to be transformed
 async function createRecipe(book, targetItem, materialType, profession, time, difficulty){
-    //let tempTag = ['Curative', 'Plant', 'Healing'];
-    
+       
     let protoItem  = duplicate(game.items.getName(targetItem));
     book = game.actors.getName(book);
     await book.createEmbeddedDocuments("Item", [protoItem]);
@@ -200,16 +199,8 @@ class RecipeData {
         
         return game.actors.getName(book).items.getName(name)
     }
-    //returns an array of item keys based 
-    static findComponents(book, term) {  
-        let bookObj = game.actors.getName(book);
-        let multiObj = bookObj.data.items.filter(item => (item.data.data.description.value).includes(term) );
-        let multi = [];
-        for (let i = 0; i< multiObj.length; i++){
-            multi.push(multiObj[i].data._id)
-        }
-        return  multi;
-    }
+
+//-------In: Book name (String in name field, usually "Book") and returns an array of book names --------
     static findBooks(key){
         let bookObj = game.actors.filter(i =>i.name.includes(key))
         let books = [];
@@ -218,24 +209,7 @@ class RecipeData {
         }
         return books;
     }
-
-    // creates a Component Object from an item key
-    static createComponent (actor, key){
-        let item = actor.data.items.get(key);
-        let kwStart = (item.data.data.description.value).indexOf("@");
-        let kw = (item.data.data.description.value).slice(kwStart+1, kwStart+5);
-
-        const newComponent = {
-            id: foundry.utils.randomID(16),
-            label: item.data.name,
-            keyword: kw,
-            value: item.data.data.price,
-            quantity: 1
-        }
-
-            return newComponent;
-    }
-
+ //-------In: Book name and key (String in name field, usually "(Recipe)") and returns an array of Recipe Names--------       
     static findRecipes(book, key){
         book = game.actors.getName(book);
         let multiObj = book.data.items.filter(item => (item.name).includes(key) );
@@ -245,10 +219,9 @@ class RecipeData {
         }
         multi.sort();
         return  multi;
-        
-
-    }
-
+ 
+        }   
+//-------Takes in the Raw text for a recipe tag as separate strings, and returns a single string--------
     static recipeTagger(professionType, craftingTime, difficulty, component){
 
         let linebreak = "<br>";
@@ -268,18 +241,29 @@ class RecipeData {
         return tags;
 
     }
-    //takes in book actor name and recipe item name
+    //-------Parses a Recipe and returns the key data as an object --------
     static recipeParser(book, item){
         book = game.actors.getName(book);
         item = book.data.items.getName(item);
         let desc = item.data.data.description.value;
-        let component =  desc.substring(desc.indexOf(this.COMPONENT)+this.COMPONENT.length+6,desc.indexOf(this.TIME)-6),
-        comp = component.split('|')
+        let component =  desc.substring(desc.indexOf(this.COMPONENT)+this.COMPONENT.length+6,desc.indexOf(this.TIME)-6);
+        let comp = component.split('|');
+        let compNum = [];
+        for (let i = 0; i < comp.length; i++) {
+            if (comp[i].includes('(')){
+            compNum.push(comp[i].substring(comp[i].indexOf('(')+1,comp[i].indexOf(')')));
+            comp[i]=comp[i].replace((comp[i].substring(comp[i].indexOf('('),comp[i].indexOf(')')+1)), "");
+            }else {
+                compNum.push('1');
+            }
+            
+        }
         let parsedItem = {
             name: item.name,
             book: book.name,
             profession: desc.substring(desc.indexOf(this.PROFESSION)+this.PROFESSION.length+6,desc.indexOf(this.COMPONENT)-6),
-            component: comp,
+            components: comp,
+            componentsNum: compNum,
             time: desc.substring(desc.indexOf(this.TIME)+this.TIME.length+6,desc.indexOf(this.DIFFICULTY)-6),
             difficulty: desc.substring(desc.indexOf(this.DIFFICULTY)+this.DIFFICULTY.length+6,desc.length -4),
             baseDesc: desc.substring(0, desc.indexOf(this.RECIPE))
@@ -290,11 +274,11 @@ class RecipeData {
 
 
     }
+    //-------Counts the quantity of a single component in an inventory--------
 static compCount(value){
-    //Crafter.craftingMenu.options.compInv =[];
     const inv = Crafter.craftingMenu.options.compInv;
               if (game.actors.getName("TestCrafter") && game.actors.getName("TestCrafter").items.getName(value)) {
-                  //const inv = Crafter.craftingMenu.options.compInv;
+                
                   const items = game.actors.getName("TestCrafter").items.filter(i => i.name == value);
                   let p = true;
 
@@ -325,9 +309,10 @@ static compCount(value){
 
 }
 
-//test
+
 
 class CraftingMenu extends FormApplication{
+    
     static get defaultOptions() {
 
         const defaults = super.defaultOptions;
@@ -351,7 +336,7 @@ class CraftingMenu extends FormApplication{
 
     }
     
-    //initial and submit  Sends Data to Form
+    //Sends Data to the Crafting Form
     getData(options) {
         Crafter.log(false, "Get Data")
         
@@ -364,7 +349,7 @@ class CraftingMenu extends FormApplication{
             recipies: RecipeData.findRecipes(options.currentBook, "(Recipe)"),
             //-------Recipe Attributes--------
             profession: parsedItem.profession,
-            components: parsedItem.component,
+            components: parsedItem.components,
             time: parsedItem.time,
             difficulty: parsedItem.difficulty,
             baseDesc: parsedItem.baseDesc,
@@ -385,27 +370,31 @@ class CraftingMenu extends FormApplication{
         html.on('click', "[data-action]", this._handleButtonClick.bind(this));
       }
 
+    //-------Handles updating options data --------
+    //-------Is called on form Change--------
     async _updateObject(event, formData) {
        // Crafter.log(false, event);
-        //switches the selected Item and book
         if (event.type === "change"){
-            const caller = event.target.id;
+            const caller = event.target.name;
             switch(caller){
-                case 'changeBook':{
+                case 'bookName':{
                     this.options.currentBook = event.target.value;
                     this.options.currentItem = RecipeData.findRecipes(event.target.value, "(Recipe)")[0];
                     this.options.recipeIndex = 0;
                     this.render();
                 }
                 case 'selectedItem':{
+                    if(event.target.value == this.options.currentBook){
+                        break;
+                    }
                     let parsedItem = RecipeData.recipeParser(this.options.currentBook, event.target.value);
-                    // this.options.currentItem = event.target.value;
-                    // this.options.recipeIndex = event.target.selectedIndex;
+          
                     const updates = {
                         currentItem: event.target.value,
                         recipeIndex: event.target.selectedIndex,
                         profession: parsedItem.profession,
-                        components: parsedItem.component,
+                        components: parsedItem.components,
+                        componentsNum: parsedItem.componentsNum,
                         time: parsedItem.time,
                         difficulty: parsedItem.difficulty,
                         baseDesc: parsedItem.baseDesc,
@@ -445,17 +434,15 @@ class CraftingMenu extends FormApplication{
                         ui.notifications.info("Craft  that Bitch!");
                         Crafter.log(false, k + " k value");
                         let item = craftFromRecipe(Crafter.craftingMenu.options.currentBook,  "TestCrafter", Crafter.craftingMenu.options.currentItem);
-                        //if (item){
+                      
                             ui.notifications.info("Delete that shit" + item);
                             Crafter.log(false, item);
 
                             for (let i = 0; i < this.options.components.length; i++) {
                                 await game.actors.getName("TestCrafter").deleteEmbeddedDocuments("Item", [game.actors.getName("TestCrafter").items.getName(this.options.components[i]).id]); 
-                                
-                                //this.options.components.splice(this.options.compInv.indexOf(this.options.compInv.find(i=>i.name, this.options.components[i])),1)
-
+                            
                             Crafter.log(false, "Deleting "+ this.options.components[i])
-                         //   }
+                
                              this.render();
 
 
@@ -477,7 +464,8 @@ class CraftingMenu extends FormApplication{
         const action = clickedElement.data().action;
        
     }  
-
+//-------Sets the initial options data-------
+//-------Should only be run once--------
     static SetInitials(){
         
         let iBook = RecipeData.findBooks("Book");
@@ -494,7 +482,8 @@ class CraftingMenu extends FormApplication{
              compInv: [],
              //-------Recipe Attributes--------
              profession: parsedItem.profession,
-             components: parsedItem.component,
+             components: parsedItem.components,
+             componentsNum: parsedItem.componentsNum,
              time: parsedItem.time,
              difficulty: parsedItem.difficulty,
              baseDesc: parsedItem.baseDesc,
@@ -618,40 +607,37 @@ class RecipeMenu extends FormApplication {
     
 
 }
-Handlebars.registerHelper('isselected', function (value) {
-
-    value2 = Crafter.craftingMenu.options.recipeIndex;
-    return value == value2;
-});
-
-Handlebars.registerHelper('complookupname', function (value) {
-
-    if (game.items.getName(value)) {
-
-        let value2 = game.items.getName(value).name;
-        Crafter.log(false, value2);
-        return value2
-    } else {
-        return "Vial";
-    }
 
 
-});
-
+//-------Handlebars Helpers--------
 isFunction = function (value) {
     return typeof value === 'function';
 };
 
+//-------Counts the number of a given component in Crafters inventory--------
 Handlebars.registerHelper('compcount', function (value) {
     return RecipeData.compCount(value);
 
 });
 
+//-------Returns the number of required components in the recipe for a single component--------
+Handlebars.registerHelper('compneededcount', function (index) {
+    if(Crafter.craftingMenu.options.componentsNum== undefined){
+        return "1";
+    }else{
+        return Crafter.craftingMenu.options.componentsNum[index];
+    }
+
+});
+
+//-------Small function to help with table formatting--------
+//-------Used to wrap <td> elements--------
 Handlebars.registerHelper('numberofcomps2', function (value) {
     return value.length==2;
 
 });
 
+//-------Returns individual images for componenets--------
 Handlebars.registerHelper('complookupimg', function (value) {
 
     if (game.items.getName(value)) {
@@ -663,7 +649,7 @@ Handlebars.registerHelper('complookupimg', function (value) {
 
 
 
-
+//-------Used to set the border color for compoenents, and items--------
 Handlebars.registerHelper("color", function (value) {
     if (isFunction(value)) {
         value = value.call(this);
@@ -701,30 +687,3 @@ Handlebars.registerHelper("color", function (value) {
 
 });
 
-// Handlebars.registerHelper("HBTEST", function(object, key) {
-
-//     switch (searchType){
-//         case "allBooks":{
-//             bookObj = game.actors.filter(i =>i.name.includes(key))
-//             let books = [];
-//             for (let i = 0; i < bookObj.length; i++){             
-//             books.push(bookObj[i].name);
-//             }
-//             return books;
-//         }
-            
-                
-            
-             
-        
-//         case "filterItems":{
-
-//         }
-//         default:{
-//             return "No search available"
-//         }
-//     }
-
- 
-//   }); 
- 

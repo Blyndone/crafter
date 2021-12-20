@@ -55,6 +55,12 @@
       </tr>
     </table>
 </div>
+
+
+<div>
+  <progress id="file" value="{{item.data.data.price}}" max="100" class="crafter-progress-bar" >  </progress><
+</div>
+<div class="crafter-progress">{{item.data.data.price}}% complete</div>
 <div>
   <h2>Components</h2>
 </div>  
@@ -62,12 +68,12 @@
 <tr>
     {{#each components}}<form id="craftingmenu" class="crafter-crafting-menu">
      <td>
-      <table class="crafter-item-smallcard-frame" style="border: 4px groove {{#color (complookupname this) }}{{/color}}">
+      <table class="crafter-item-smallcard-frame" style="border: 4px groove {{#color this}}{{/color}}">
       <tr>
         <td style ="width:55px">
           <div class="crafter-item-container-fontframe">
-        <img src="{{#complookupimg @this}}{{this}}{{/complookupimg}}" class="crafter-item-smallcard-item"  style="border: 4px solid {{#color (complookupname this)}}{{/color}}" >
-        <div class="crafter-item-container-font">{{#compcount @this}}{{/compcount}}/1</div>
+        <img src="{{#complookupimg @this}}{{this}}{{/complookupimg}}" class="crafter-item-smallcard-item"  style="border: 4px solid {{#color this}}{{/color}}" >
+        <div class="crafter-item-container-font">{{#compcount @this}}{{/compcount}}/{{#compneededcount @index}}{{/compneededcount}}</div>
         </div>
         </td>
         <td class="crafter-item-smallcard-name" >
@@ -123,7 +129,7 @@
     <thead><h2>Craft Item </h2></thead>
     <tbody>
       <tr>
-        <td><button type="submit" value="craft" name = "Sub" width ="100%">Submit</button></td>
+        <td><button type="submit" value="craft" name = "Sub" width ="100%">Craft</button></td>
       </tr>
     </tbody>
   </table>
@@ -131,26 +137,3 @@
 </form>
 
 
-
-{{!-- 
-<td><input type="text" name="submitText" id="inputText"  data-dtype="String" placeholder={{#if item.name}{{{item.name}{else}"Search for an Item"{/if}></td>
-<form>
-  <ul class="todo-list flexcol">
-    #each todos
-    <li class="flexrow" data-todo-id="{{id">
-      <input type="checkbox" name="{{id.isDone" title="{{localize " TODO-LIST.mark-done"" data-dtype="Boolean"
-        {{checked isDone />
-
-      <input type="text" value="{{label" name="{{id.label" data-dtype="String" />
-
-      <button type="button" title="{{localize " TODO-LIST.delete-todo"" data-action="delete"
-        class="flex0 todo-list-icon-button">
-        <i class="fas fa-trash"></i>
-      </button>
-    </li>
-    {{/each
-  </ul>
-
-  <button type="button" data-action="create"><i class="fas fa-plus"></i> {{localize "TODO-LIST.add-todo"</button>
-</form>
---}}
