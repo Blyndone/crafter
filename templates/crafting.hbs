@@ -1,7 +1,6 @@
 <form id="craftingMenu" class="crafer-crafting-menu">
 
-  
-  
+ 
   
   <div class="crafter-crafting-item-name">
     {{currentItemRaw}}
@@ -9,7 +8,7 @@
 
     
   </div>
-  <div class="crafter-item-list-frame">
+  <div class="">
     <table>
       <thead></thead>
       <tbody>
@@ -17,20 +16,23 @@
         
         
           <td>
-            <select class="crafter-item-list" id="selectedItem" name="selectedItem" size="10" multiple="">
-             {{! <option class="crafter-select-option-selected" value="" selected="selected" index={{recipeIndex}}>
+            <ol class="crafter-item-list" id="selectedItem" name="selectedItem" size="10" multiple="">
+             {{! <option class="crafter-select-option-selected" value="" selected="selected" index={{recipeIndex}}
                {{! ---{{item.name}---</option> --}}
               {{#each recipies}}
 
               {{#if (eq @index ../recipeIndex)}}
-              <option class="crafter-select-option-selected" value="{{this}}" selected="selected" index={{@index}} name="{{this}}"> {{this}}</option>
+              <a class ="item-create " name= "{{this}}" type="selectedItem" id={{@index}}><li class="crafter-select-option-selected" value="{{this}}" index={{@index}} name="{{this}}"><b>{{this}}</b></li></a>
               {{else}}
-              <option class="crafter-select-option" value="{{this}}" index={{@index}} name="{{this}}"> {{this}}</option>
+            
+
+              <a class ="item-create" name= "{{this}}" type="selectedItem" id={{@index}}><li class="crafter-select-option" value="{{this}}" index={{@index}} name="{{this}}">{{this}}</li></a>
+              
               {{/if}}
 
               {{/each}}
         
-            </select>
+            </ol>
           </td>
         
         </tr>
@@ -108,16 +110,17 @@
         <td class="crafter-craftingmenu-parsed-heading-label">
           <Strong>Book Name</Strong>
         </td>
-        <td class ="crafter-craftingmenu-parsed-heading"></td>
+        <td class ="crafter-craftingmenu-parsed-heading "></td>
         <td>
-          <select name="bookName" id="changeBook" value="changeBook" aria-placeholder="Bookname">
-            <option value="{{currentBook}}" selected="selected" ><b>{{currentBook}}</b></option>
+          <ol name="bookName" type="bookName" id="changeBook"  aria-placeholder="Bookname" class ="crafter-booklist">
+            <li name="{{currentBook}}" selected="selected" ><b>{{currentBook}}</b></li>
          {{#each books}}
          {{#if (ne this ../currentBook)}}
-            <option value= "{{this}}" id={{@index}} name = "{{this}}"> {{this}}</option>
+         
+           <a name="{{this}}" class="item-create" type ="bookName" id={{@index}}> <li > {{this}}</a></li>
             {{/if}}
            {{/each}}
-          </select>
+          </ol>
           {{!<input type="text" name = "bookName"  data-dtype="String" placeholder = "Book Name">--}}
         </td>
       </tr>

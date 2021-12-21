@@ -160,6 +160,13 @@ async function craftFromRecipe(book, crafter, recipe) {
     return item;
     }
 
+async function log(force, ...args) {
+    const shouldLog = force || game.modules.get('_dev-mode')?.api?.getPackageDebugValue(Crafter.ID);
+
+    if (shouldLog) {
+        console.log(Crafter.ID, '|', ...args);
+    }
+    }
 
 class RecipeData {
     static RECIPE = '&lt;Recipe&gt;';
@@ -325,6 +332,9 @@ class CraftingMenu extends FormApplication{
             id: 'crafter',
             template: Crafter.TEMPLATES.CRAFTING,
             title: 'Crafting Menu',
+            scrollY: [
+                ".crafter-item-list"
+              ],
 
         }
         if (Crafter.craftingMenu == undefined){
@@ -358,6 +368,8 @@ class CraftingMenu extends FormApplication{
             currentItem: options.currentItem,
             currentBook: options.currentBook,
             recipeIndex: options.recipeIndex,
+           
+        
          
         
             
@@ -368,93 +380,21 @@ class CraftingMenu extends FormApplication{
     activateListeners(html) {
         super.activateListeners(html);
         html.on('click', "[data-action]", this._handleButtonClick.bind(this));
+
+
+        
+        html.find('.item-create').click(ev => {
+            log(false, "ev.currentTarget.target "+ev.currentTarget.target+ " | ev.currentTarget.name "+ev.currentTarget.name);
+            this._handleButtonClick(ev);
+          });
+
       }
 
     //-------Handles updating options data --------
     //-------Is called on form Change--------
     async _updateObject(event, formData) {
-       // Crafter.log(false, event);
-        if (event.type === "change"){
-            const caller = event.target.name;
-            switch(caller){
-                case 'bookName':{
-                    this.options.currentBook = event.target.value;
-                    this.options.currentItem = RecipeData.findRecipes(event.target.value, "(Recipe)")[0];
-                    this.options.recipeIndex = 0;
-                    this.render();
-                }
-                case 'selectedItem':{
-                    if(event.target.value == this.options.currentBook){
-                        break;
-                    }
-                    let parsedItem = RecipeData.recipeParser(this.options.currentBook, event.target.value);
-          
-                    const updates = {
-                        currentItem: event.target.value,
-                        recipeIndex: event.target.selectedIndex,
-                        profession: parsedItem.profession,
-                        components: parsedItem.components,
-                        componentsNum: parsedItem.componentsNum,
-                        time: parsedItem.time,
-                        difficulty: parsedItem.difficulty,
-                        baseDesc: parsedItem.baseDesc,
-                        currentItemRaw: String(event.target.value.currentItem).slice(8),
-                    }
-                    foundry.utils.mergeObject(this.options, updates);
-                    this.render();
-                }
-                default:{
-                }
-            }
-        }
-     
-        if (event.type === "submit") {
-            const caller = event.submitter.value;
-            switch (caller) {
-               
-                case 'craft':{
-                    Crafter.craftingMenu.options.compInv =[];
-                    let k = true;
-                    let c = false;
-                    for (let i = 0; i < this.options.components.length; i++) {
-                        RecipeData.compCount(this.options.components[i]);
-                        
-                    }
-                    for (let i = 0; i < this.options.components.length; i++) {
-                        c = false;
-                        for (let j = 0; j < this.options.compInv.length; j++) {
-                            if (this.options.components[i] == this.options.compInv[j].name) {
-                                c = true;
-                                break;
-                            }
-                        }
-                        k = (c && k);
-                    }
-                    if (k == true) {
-                        ui.notifications.info("Craft  that Bitch!");
-                        Crafter.log(false, k + " k value");
-                        let item = craftFromRecipe(Crafter.craftingMenu.options.currentBook,  "TestCrafter", Crafter.craftingMenu.options.currentItem);
-                      
-                            ui.notifications.info("Delete that shit" + item);
-                            Crafter.log(false, item);
 
-                            for (let i = 0; i < this.options.components.length; i++) {
-                                await game.actors.getName("TestCrafter").deleteEmbeddedDocuments("Item", [game.actors.getName("TestCrafter").items.getName(this.options.components[i]).id]); 
-                            
-                            Crafter.log(false, "Deleting "+ this.options.components[i])
-                
-                             this.render();
-
-
-
-                        }
-                    }
-        
-                } 
-                default:
-                    
-            }
-        }
+        this.render();
 
 
     }
@@ -462,6 +402,98 @@ class CraftingMenu extends FormApplication{
     async _handleButtonClick (event){
         const clickedElement = $(event.currentTarget);
         const action = clickedElement.data().action;
+
+               // Crafter.log(false, event);
+               if (event.type === "click"){
+                const caller = event.currentTarget.type;
+                switch(caller){
+                    case 'bookName':{
+                        this.options.currentBook = event.currentTarget.name;
+                        this.options.currentItem = RecipeData.findRecipes(event.currentTarget.name, "(Recipe)")[0];
+                        this.options.recipeIndex = 0;
+                        this.render();
+                    }
+                    case 'selectedItem':{
+                        if(event.target.value == this.options.currentBook){
+                            break;
+                        }
+                        let parsedItem = RecipeData.recipeParser(this.options.currentBook, event.currentTarget.name);
+              
+                        const updates = {
+                            currentItem: event.currentTarget.name,
+                            recipeIndex: parseInt(event.currentTarget.id),
+                            profession: parsedItem.profession,
+                            components: parsedItem.components,
+                            componentsNum: parsedItem.componentsNum,
+                            time: parsedItem.time,
+                            difficulty: parsedItem.difficulty,
+                            baseDesc: parsedItem.baseDesc,
+                            currentItemRaw: String(event.target.value.currentItem).slice(8),
+                        }
+                        foundry.utils.mergeObject(this.options, updates);
+                   
+                        this.render();
+                   
+                        log(false, "ASDF");
+                    }
+                    default:{
+                    }
+                }
+            }
+         
+            if (event.type === "submit") {
+                const caller = event.submitter.value;
+                switch (caller) {
+                   
+                    case 'craft':{
+                        Crafter.craftingMenu.options.compInv =[];
+                        let k = true;
+                        let c = false;
+                        for (let i = 0; i < this.options.components.length; i++) {
+                            RecipeData.compCount(this.options.components[i]);
+                            
+                        }
+                        for (let i = 0; i < this.options.components.length; i++) {
+                            c = false;
+                            for (let j = 0; j < this.options.compInv.length; j++) {
+                                if (this.options.components[i] == this.options.compInv[j].name) {
+                                    c = true;
+                                    break;
+                                }
+                            }
+                            k = (c && k);
+                        }
+                        if (k == true) {
+                            ui.notifications.info("Craft  that Bitch!");
+                            Crafter.log(false, k + " k value");
+                            let item = craftFromRecipe(Crafter.craftingMenu.options.currentBook,  "TestCrafter", Crafter.craftingMenu.options.currentItem);
+                          
+                                ui.notifications.info("Delete that shit" + item);
+                                Crafter.log(false, item);
+    
+                                for (let i = 0; i < this.options.components.length; i++) {
+                                    await game.actors.getName("TestCrafter").deleteEmbeddedDocuments("Item", [game.actors.getName("TestCrafter").items.getName(this.options.components[i]).id]); 
+                                
+                                Crafter.log(false, "Deleting "+ this.options.components[i])
+                    
+                                 this.render();
+    
+    
+    
+                            }
+                        }
+            
+                    } 
+                    default:
+                        
+                }
+            }
+
+
+
+
+
+
        
     }  
 //-------Sets the initial options data-------
@@ -655,7 +687,7 @@ Handlebars.registerHelper("color", function (value) {
         value = value.call(this);
     }
 
-    if (value) {
+    if (game.items.getName(value)!=undefined) {
         let color = game.items.getName(value).data.data.rarity;
         switch (color) {
             case 'common': {

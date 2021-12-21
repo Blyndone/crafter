@@ -125,10 +125,16 @@
 
   min-width: 550px;
   max-width: 550px;
+  max-height: 200px;
   background-color: azure;
   color: black;
   font-weight: bold;
-  display: flex;
+  overflow-y: scroll;
+  scroll-behavior: auto;
+  list-style-type: none;
+  
+  
+  
   
 }
 
@@ -175,15 +181,17 @@
 
 .crafter-select-option {
   display: flex !important;
-  padding: 2px 25px;
-
+  padding: 1px 0px;
+  background: lightgrey;
+  font-weight: normal;
 }
 
 .crafter-select-option-selected {
   display: flex !important;
-  padding: 3px 0px;
+  padding: 2px 19px;
   font-weight: bold;
   color: black;
+  background: lightslategray;
 }
 
 
@@ -295,4 +303,12 @@
         calc(var(--stroke-width) * -1) 0 0 var(--stroke-color),
         0 var(--stroke-width) 0 var(--stroke-color),
         0 calc(var(--stroke-width) * -1) 0 var(--stroke-color);
+    }
+
+    .item-create{
+      
+    }
+    .crafter-booklist{
+      list-style-type: none;
+      
     }
