@@ -321,7 +321,52 @@ static compCount(value){
 
 }
 
+class ProgressTracker{
 
+    static checkProgress(crafter, book, recipe){
+        crafter = game.actors.getName(crafter);
+        book = game.actors.getName(book);
+        recipe = book.data.items.getName(recipe);
+        let flag =  recipe.getFlag(Crafter.ID, crafter.id);
+        if (flag !=  undefined){
+        return flag;
+        }else{
+            return 0;
+        }
+
+
+    }
+    //Crafter "Name", Book "Name", Recipe "Name"
+    static async setProgress(crafter, book, recipe, incPer){
+        crafter = game.actors.getName(crafter);
+        book = game.actors.getName(book);
+        recipe = book.data.items.getName(recipe);
+        let flag = await recipe.getFlag(Crafter.ID, crafter.id);
+        if(flag == undefined){
+            flag =0;
+        }
+        await recipe.setFlag(Crafter.ID, crafter.id, flag+incPer);
+        flag = await recipe.getFlag(Crafter.ID, crafter.id);
+        if (flag >=100){
+            Crafter.log(false, flag + " | 100%");
+            await recipe.unsetFlag(Crafter.ID, crafter.id);
+            return 100;
+
+        }else{
+            Crafter.log(false, flag + " | less than 100");
+        return flag+incPer;
+        } 
+    }
+
+    
+
+
+
+
+
+
+
+}
 
 class CraftingMenu extends FormApplication{
     
@@ -356,7 +401,7 @@ class CraftingMenu extends FormApplication{
         Crafter.log(false, "Get Data")
         
        let parsedItem = RecipeData.recipeParser("TestBook", options.currentItem);
-
+       let prog = ProgressTracker.checkProgress("TestCrafter", options.currentBook, options.currentItem); 
         return {
             //-------Form Lists Attributes--------
             item: RecipeData.recipeItemFromName(options.currentBook, options.currentItem),
@@ -373,7 +418,7 @@ class CraftingMenu extends FormApplication{
             currentItem: options.currentItem,
             currentBook: options.currentBook,
             recipeIndex: options.recipeIndex,
-           
+            progress: prog,
         
          
         
@@ -440,7 +485,7 @@ class CraftingMenu extends FormApplication{
                             time: parsedItem.time,
                             difficulty: parsedItem.difficulty,
                             baseDesc: parsedItem.baseDesc,
-                            currentItemRaw: String(event.target.value.currentItem).slice(8),
+                            currentItemRaw: String(event.currentTarget.name).slice(8),
                         }
                         foundry.utils.mergeObject(this.options, updates);
                    
@@ -450,6 +495,7 @@ class CraftingMenu extends FormApplication{
                     }
                     case 'craft':{
                         await this.CraftRecipe();
+
                         this.render();
                     //     Crafter.craftingMenu.options.compInv =[];
                         
@@ -536,6 +582,8 @@ class CraftingMenu extends FormApplication{
         if (k== true) {
 
             let item = craftFromRecipe(Crafter.craftingMenu.options.currentBook, "TestCrafter", Crafter.craftingMenu.options.currentItem);
+            await ProgressTracker.setProgress("TestCrafter",Crafter.craftingMenu.options.currentBook, Crafter.craftingMenu.options.currentItem, 20);
+            Crafter.craftingMenu.options.progress = ProgressTracker.checkProgress("TestCrafter", Crafter.craftingMenu.options.currentBook, Crafter.craftingMenu.options.currentItem);
             if(item){
 
             for (let i = 0; i < recipeInv.length; i++) {
