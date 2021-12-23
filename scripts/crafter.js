@@ -143,20 +143,25 @@ async function craftFromRecipe(book, crafter, recipe) {
     let name =recipe.name.substring(8);
     let protoItem = duplicate(recipe);
     protoItem._id = foundry.utils.randomID(16);
-    await crafter.createEmbeddedDocuments("Item", [protoItem]);
-    let item = crafter.data.items.find(i=>i.name === recipe.name);
+    protoItem.name = name;
+    protoItem.data.description.value = desc;
+   
+   let item = await crafter.createEmbeddedDocuments("Item", [protoItem]); 
+    // await crafter.createEmbeddedDocuments("Item", [protoItem]);
     
-    let updates = {
-        _id: item._id,
-        name: name,
-        data: {
-            description: {
-                value: desc,
-            },
+    // let item = crafter.data.items.find(i=>i.name === recipe.name);
+    
+    // let updates = {
+    //     _id: item._id,
+    //     name: name,
+    //     data: {
+    //         description: {
+    //             value: desc,
+    //         },
             
-        }
-    }
-    await crafter.updateEmbeddedDocuments("Item", [updates]);
+    //     }
+    // }
+    // await crafter.updateEmbeddedDocuments("Item", [updates]);
     return item;
     }
 
@@ -258,10 +263,10 @@ class RecipeData {
         let compNum = [];
         for (let i = 0; i < comp.length; i++) {
             if (comp[i].includes('(')){
-            compNum.push(comp[i].substring(comp[i].indexOf('(')+1,comp[i].indexOf(')')));
+            compNum.push(parseInt(comp[i].substring(comp[i].indexOf('(')+1,comp[i].indexOf(')'))  ));
             comp[i]=comp[i].replace((comp[i].substring(comp[i].indexOf('('),comp[i].indexOf(')')+1)), "");
             }else {
-                compNum.push('1');
+                compNum.push(1);
             }
             
         }
@@ -308,7 +313,7 @@ static compCount(value){
                   return num;
 
               } else {
-                  return "0";
+                  return 0;
               }
 
             }
@@ -383,13 +388,19 @@ class CraftingMenu extends FormApplication{
 
 
         
-        html.find('.item-create').click(ev => {
+        html.find('.item-create ').click(ev => {
             log(false, "ev.currentTarget.target "+ev.currentTarget.target+ " | ev.currentTarget.name "+ev.currentTarget.name);
             this._handleButtonClick(ev);
           });
 
-      }
+          html.find('.crafter-craft-button ').click(ev => {
+            log(false, "ev.currentTarget.target "+ev.currentTarget.target+ " | ev.currentTarget.name "+ev.currentTarget.name);
+            this._handleButtonClick(ev);
+          });  
 
+      }
+      
+      
     //-------Handles updating options data --------
     //-------Is called on form Change--------
     async _updateObject(event, formData) {
@@ -398,7 +409,7 @@ class CraftingMenu extends FormApplication{
 
 
     }
-
+    
     async _handleButtonClick (event){
         const clickedElement = $(event.currentTarget);
         const action = clickedElement.data().action;
@@ -412,6 +423,7 @@ class CraftingMenu extends FormApplication{
                         this.options.currentItem = RecipeData.findRecipes(event.currentTarget.name, "(Recipe)")[0];
                         this.options.recipeIndex = 0;
                         this.render();
+                        break;
                     }
                     case 'selectedItem':{
                         if(event.target.value == this.options.currentBook){
@@ -433,69 +445,124 @@ class CraftingMenu extends FormApplication{
                         foundry.utils.mergeObject(this.options, updates);
                    
                         this.render();
-                   
-                        log(false, "ASDF");
+                        break;
+                        
                     }
+                    case 'craft':{
+                        await this.CraftRecipe();
+                        this.render();
+                    //     Crafter.craftingMenu.options.compInv =[];
+                        
+                    //     let k = true;
+                    //     let c = false;
+
+
+
+                    //     for (let i = 0; i < this.options.components.length; i++) {
+                    //         RecipeData.compCount(this.options.components[i]);
+                            
+                    //     }
+                    //     for (let i = 0; i < this.options.components.length; i++) {
+                    //         c = false;
+                    //         for (let j = 0; j < this.options.compInv.length; j++) {
+                    //             if (this.options.components[i] == this.options.compInv[j].name) {
+                    //                 c = true;
+                    //                 break;
+                    //             }
+                    //         }
+                    //         k = (c && k);
+                    //     }
+                    //     if (k == true) {
+                    //         ui.notifications.info("Craft  that Bitch!");
+                    //         Crafter.log(false, k + " k value");
+                    //         let item = craftFromRecipe(Crafter.craftingMenu.options.currentBook,  "TestCrafter", Crafter.craftingMenu.options.currentItem);
+                          
+                    //             ui.notifications.info("Delete that shit" + item);
+                    //             Crafter.log(false, item);
+    
+                    //             for (let i = 0; i < this.options.components.length; i++) {
+
+
+                                    
+                                    
+                    //                 await game.actors.getName("TestCrafter").deleteEmbeddedDocuments("Item", [game.actors.getName("TestCrafter").items.getName(this.options.components[i]).id]); 
+                                
+
+
+
+                    //             Crafter.log(false, "Deleting "+ this.options.components[i])
+                    
+                    //              this.render();
+    
+    
+    
+                    //         }
+                    //     }
+                    //     break;
+            
+                     } 
+                    
                     default:{
                     }
                 }
             }
          
-            if (event.type === "submit") {
-                const caller = event.submitter.value;
-                switch (caller) {
-                   
-                    case 'craft':{
-                        Crafter.craftingMenu.options.compInv =[];
-                        let k = true;
-                        let c = false;
-                        for (let i = 0; i < this.options.components.length; i++) {
-                            RecipeData.compCount(this.options.components[i]);
-                            
-                        }
-                        for (let i = 0; i < this.options.components.length; i++) {
-                            c = false;
-                            for (let j = 0; j < this.options.compInv.length; j++) {
-                                if (this.options.components[i] == this.options.compInv[j].name) {
-                                    c = true;
-                                    break;
-                                }
-                            }
-                            k = (c && k);
-                        }
-                        if (k == true) {
-                            ui.notifications.info("Craft  that Bitch!");
-                            Crafter.log(false, k + " k value");
-                            let item = craftFromRecipe(Crafter.craftingMenu.options.currentBook,  "TestCrafter", Crafter.craftingMenu.options.currentItem);
-                          
-                                ui.notifications.info("Delete that shit" + item);
-                                Crafter.log(false, item);
-    
-                                for (let i = 0; i < this.options.components.length; i++) {
-                                    await game.actors.getName("TestCrafter").deleteEmbeddedDocuments("Item", [game.actors.getName("TestCrafter").items.getName(this.options.components[i]).id]); 
-                                
-                                Crafter.log(false, "Deleting "+ this.options.components[i])
+       
+    }  
+
+
+    async CraftRecipe() {
+        Crafter.craftingMenu.options.compInv = [];
+        let k = true;
+        let c = false;
+        let components = Crafter.craftingMenu.options.components;
+        let compInv = Crafter.craftingMenu.options.components;
+        let crafterInv = [];
+        let recipeInv = this.options.componentsNum.slice();
+        for (let i = 0; i < components.length; i++) {
+           crafterInv.push(RecipeData.compCount(components[i]));
+        }
+
+      
+            for (let i = 0; i < recipeInv.length; i++) {
+                    c=false
+                if (crafterInv[i] >= recipeInv[i]) {
+                    c = true;
                     
-                                 this.render();
-    
-    
-    
-                            }
-                        }
-            
-                    } 
-                    default:
-                        
                 }
-            }
+                k= (c&&k)    
+            
+        }
+        if (k== true) {
+
+            let item = craftFromRecipe(Crafter.craftingMenu.options.currentBook, "TestCrafter", Crafter.craftingMenu.options.currentItem);
+            if(item){
+
+            for (let i = 0; i < recipeInv.length; i++) {
+                let currentItem = game.actors.getName("TestCrafter").data.items.getName(components[i]);
+                    while(recipeInv[i] >0){
+                        const updates = [{_id: currentItem.id, data: { quantity: currentItem.data.data.quantity -1 } }];
+                        const updated = await game.actors.getName("TestCrafter").updateEmbeddedDocuments("Item", updates);
 
 
+                    //    currentItem.data.data.quantity-=1;
+                        recipeInv[i]-=1;
+                        if (currentItem.data.data.quantity == 0){
+                            await game.actors.getName("TestCrafter").deleteEmbeddedDocuments("Item", [currentItem.id]);
+                        }
 
+                    }
 
 
 
        
-    }  
+                }
+
+
+
+            }
+        }
+    }
 //-------Sets the initial options data-------
 //-------Should only be run once--------
     static SetInitials(){

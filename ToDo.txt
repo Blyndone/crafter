@@ -7,7 +7,7 @@ POC
 
 User Interface
     Unified color and look
-    Select box color 
+ // Select box color 
     Component display fixed size
     Recipe Quantity
     Component data  
@@ -21,7 +21,7 @@ User Interface
         Hover item tooltip
 
     Progress Bar   //bones done
-    Crafting Menu to UL/LI
+    //Crafting Menu to UL/LI
 
 
 Code goals
@@ -37,7 +37,7 @@ Code goals
     GM Connected Check for db operations
     Checks for Error States
         No Book/ No Crafter/No Recipies
-    Fix Scroll Jumping
+//    Fix Scroll Jumping
 
 
 
