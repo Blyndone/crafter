@@ -1,6 +1,9 @@
 console.log("Crafter || Active");
 class Crafter {
     static ID = 'crafter';
+    static COMPPACK = '';
+    static RECIPEPACK = '';
+    
     static TEMPLATES = {
         RECIPE: `modules/${this.ID}/templates/recipe.hbs`,
         CRAFTING: `modules/${this.ID}/templates/crafting.hbs`
@@ -15,7 +18,7 @@ class Crafter {
     }
 
 
-
+////////game.packs.get("world.craft-comps").index.find(i=>i.name == "Arrow").img
     /**
      * A single Recipe in our list of Recipes.
      * @typedef {Object} Recipe
@@ -106,10 +109,18 @@ Hooks.on('renderJournalDirectory', Crafter.renderJournalDirectory);
 
   Hooks.once('ready', () => {
     Crafter.initialize();
+    game.packs.get('world.crafter-components').getIndex({fields: ['name', 'img', 'data.rarity']});
     
   });
 
  
+//   Hooks.once('ready', () => {
+//     game.packs.get('spells-pack').getIndex({fields: ['data.level']});
+//   });
+//   // elsewhere
+//   game.packs.get('world.crafter-components').index.filter(i => i.data.level === 2);
+
+
 
 
 // book- name of actor to be used as Receipe book, targetItem name of Item to be transformed
@@ -165,6 +176,14 @@ class RecipeData {
     static COMPONENT = '&lt;Component&gt;';
     static TIME = '&lt;Time&gt;';
     static DIFFICULTY = '&lt;Difficulty&gt;';
+
+
+
+
+    static compfromPack(name){
+       return game.packs.get('world.crafter-components').index.filter(i => i.name === name);
+    }
+
 
 
         //returns the description of an item by searching for an exact name
@@ -742,8 +761,11 @@ Handlebars.registerHelper('numberofcomps2', function (value) {
 //-------Returns individual images for componenets--------
 Handlebars.registerHelper('complookupimg', function (value) {
 
-    if (game.items.getName(value)) {
-        return game.items.getName(value).img;
+    if (game.items.getName(value) || RecipeData.compfromPack(value)[0]) {
+       if (RecipeData.compfromPack(value)[0]){
+           return RecipeData.compfromPack(value)[0].img;
+        }else if (game.items.getName(value))
+           return game.items.getName(value).img;
     } else {
         return "icons/sundries/books/book-clasp-spiral-green.webp";
     }
@@ -757,8 +779,13 @@ Handlebars.registerHelper("color", function (value) {
         value = value.call(this);
     }
 
-    if (game.items.getName(value)!=undefined) {
-        let color = game.items.getName(value).data.data.rarity;
+    if (game.items.getName(value)|| RecipeData.compfromPack(value)[0]) {
+        let color;
+        if (RecipeData.compfromPack(value)[0]!=undefined){
+            color = RecipeData.compfromPack(value)[0].data.rarity;
+        }else {
+            color = game.items.getName(value).data.data.rarity;
+        }
         switch (color) {
             case 'common': {
                 return "grey";
