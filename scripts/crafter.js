@@ -147,22 +147,8 @@ async function craftFromRecipe(book, crafter, recipe) {
     protoItem.data.description.value = desc;
    
    let item = await crafter.createEmbeddedDocuments("Item", [protoItem]); 
-    // await crafter.createEmbeddedDocuments("Item", [protoItem]);
-    
-    // let item = crafter.data.items.find(i=>i.name === recipe.name);
-    
-    // let updates = {
-    //     _id: item._id,
-    //     name: name,
-    //     data: {
-    //         description: {
-    //             value: desc,
-    //         },
-            
-    //     }
-    // }
-    // await crafter.updateEmbeddedDocuments("Item", [updates]);
-    return item;
+
+   return item;
     }
 
 async function log(force, ...args) {
@@ -513,54 +499,7 @@ class CraftingMenu extends FormApplication{
                         await this.CraftRecipe();
 
                         this.render();
-                    //     Crafter.craftingMenu.options.compInv =[];
-                        
-                    //     let k = true;
-                    //     let c = false;
-
-
-
-                    //     for (let i = 0; i < this.options.components.length; i++) {
-                    //         RecipeData.compCount(this.options.components[i]);
-                            
-                    //     }
-                    //     for (let i = 0; i < this.options.components.length; i++) {
-                    //         c = false;
-                    //         for (let j = 0; j < this.options.compInv.length; j++) {
-                    //             if (this.options.components[i] == this.options.compInv[j].name) {
-                    //                 c = true;
-                    //                 break;
-                    //             }
-                    //         }
-                    //         k = (c && k);
-                    //     }
-                    //     if (k == true) {
-                    //         ui.notifications.info("Craft  that Bitch!");
-                    //         Crafter.log(false, k + " k value");
-                    //         let item = craftFromRecipe(Crafter.craftingMenu.options.currentBook,  "TestCrafter", Crafter.craftingMenu.options.currentItem);
-                          
-                    //             ui.notifications.info("Delete that shit" + item);
-                    //             Crafter.log(false, item);
-    
-                    //             for (let i = 0; i < this.options.components.length; i++) {
-
-
-                                    
-                                    
-                    //                 await game.actors.getName("TestCrafter").deleteEmbeddedDocuments("Item", [game.actors.getName("TestCrafter").items.getName(this.options.components[i]).id]); 
-                                
-
-
-
-                    //             Crafter.log(false, "Deleting "+ this.options.components[i])
                     
-                    //              this.render();
-    
-    
-    
-                    //         }
-                    //     }
-                    //     break;
             
                      } 
                     
@@ -611,15 +550,9 @@ class CraftingMenu extends FormApplication{
                         currentItem = RecipeData.findProxy(components[i])[0];
                     }   
                        
-                       
                         const updates = [{_id: currentItem.id, data: { quantity: currentItem.data.data.quantity -1 } }];
                        
-                       
-                       
-                       
                         const updated = await game.actors.getName("TestCrafter").updateEmbeddedDocuments("Item", updates);
-
-
                     //    currentItem.data.data.quantity-=1;
                         recipeInv[i]-=1;
                         if (currentItem.data.data.quantity == 0){
@@ -628,12 +561,7 @@ class CraftingMenu extends FormApplication{
 
                     }
 
-
-
-       
                 }
-
-
 
             }
         }
