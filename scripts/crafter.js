@@ -288,10 +288,16 @@ class RecipeData {
     }
     //-------Counts the quantity of a single component in an inventory--------
 static compCount(value){
+    let proxy = this.findProxy(value);
     const inv = Crafter.craftingMenu.options.compInv;
-              if (game.actors.getName("TestCrafter") && game.actors.getName("TestCrafter").items.getName(value)) {
+              if (game.actors.getName("TestCrafter") && (game.actors.getName("TestCrafter").items.getName(value)) != undefined || proxy!= null) {
                 
                   const items = game.actors.getName("TestCrafter").items.filter(i => i.name == value);
+                  if (proxy!= null){
+                      for (let i = 0; i < proxy.length; i++) {
+                          items.push(proxy[i]);                          
+                      }
+                  }
                   let p = true;
 
                   for (let i = 0; i < items.length; i++) {
@@ -310,6 +316,7 @@ static compCount(value){
                   for (let i = 0; i < items.length; i++) {
                       num += items[i].data.data.quantity;
                   }
+                  
                   return num;
 
               } else {
@@ -317,6 +324,15 @@ static compCount(value){
               }
 
             }
+static findProxy(value){
+    let proxy = game.actors.getName("TestCrafter").items.filter(i=>i.data.data.description.value.includes("#"+value+"#"));
+    if (proxy.length>0){
+        return proxy;
+    }else {
+        return null;
+    }
+        
+}
     
 
 }
@@ -587,9 +603,20 @@ class CraftingMenu extends FormApplication{
             if(item){
 
             for (let i = 0; i < recipeInv.length; i++) {
-                let currentItem = game.actors.getName("TestCrafter").data.items.getName(components[i]);
-                    while(recipeInv[i] >0){
+                while(recipeInv[i] >0){
+                    let currentItem;
+                    if (RecipeData.findProxy(components[i])==null){
+                        currentItem = game.actors.getName("TestCrafter").data.items.getName(components[i]);
+                    }else{
+                        currentItem = RecipeData.findProxy(components[i])[0];
+                    }   
+                       
+                       
                         const updates = [{_id: currentItem.id, data: { quantity: currentItem.data.data.quantity -1 } }];
+                       
+                       
+                       
+                       
                         const updated = await game.actors.getName("TestCrafter").updateEmbeddedDocuments("Item", updates);
 
 

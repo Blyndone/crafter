@@ -9,7 +9,7 @@ User Interface
     Unified color and look
  // Select box color 
     Component display fixed size
-    Recipe Quantity
+ //   Recipe Quantity
     Component data  
         value
         Icon for Proxies
@@ -42,8 +42,8 @@ Code goals
 
 
 Features
-    Recipe Quantity => 3/3 
-        Tagging quantities
+//    Recipe Quantity => 3/3 
+//        Tagging quantities
     Component Proxies
     Component Price Requirments
     Component Drowdown Selector for Proxies
