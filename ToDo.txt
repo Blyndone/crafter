@@ -2,14 +2,24 @@ ToDo list
 
 POC
     Integrate handlebars main config
+<<<<<<< HEAD
     .css global to local configs
+=======
+    //.css global to local configs
+>>>>>>> development
     .css parenting
 
 User Interface
     Unified color and look
+<<<<<<< HEAD
     Select box color 
     Component display fixed size
     Recipe Quantity
+=======
+ // Select box color 
+    Component display fixed size
+ //   Recipe Quantity
+>>>>>>> development
     Component data  
         value
         Icon for Proxies
@@ -20,11 +30,20 @@ User Interface
         type
         Hover item tooltip
 
+<<<<<<< HEAD
     Progress Bar
 
 
 Code goals
     Rework form saved data
+=======
+    Progress Bar   //bones done
+    //Crafting Menu to UL/LI
+
+
+Code goals
+    //Rework form saved data
+>>>>>>> development
     Check and verify item integrity
     Orphan Code clean up
     Variable standardization
@@ -36,14 +55,25 @@ Code goals
     GM Connected Check for db operations
     Checks for Error States
         No Book/ No Crafter/No Recipies
+<<<<<<< HEAD
     Fix Scroll Jumping
+=======
+//    Fix Scroll Jumping
+>>>>>>> development
 
 
 
 Features
+<<<<<<< HEAD
     Recipe Quantity => 3/3 
         Tagging quantities
     Component Proxies
+=======
+//    Recipe Quantity => 3/3 
+//        Tagging quantities
+//    Component Proxies
+    Dialog Box for selecting Proxy Components 
+>>>>>>> development
     Component Price Requirments
     Component Drowdown Selector for Proxies
     Crafting and Book Selector
@@ -70,6 +100,10 @@ Features
 
 
 Release
+<<<<<<< HEAD
+=======
+    Readme
+>>>>>>> development
     Code Comments
     Localization
     Readme.md 

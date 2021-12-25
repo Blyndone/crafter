@@ -125,16 +125,10 @@
 
   min-width: 550px;
   max-width: 550px;
-  max-height: 200px;
   background-color: azure;
   color: black;
   font-weight: bold;
-  overflow-y: scroll;
-  scroll-behavior: auto;
-  list-style-type: none;
-  
-  
-  
+  display: flex;
   
 }
 
@@ -181,17 +175,15 @@
 
 .crafter-select-option {
   display: flex !important;
-  padding: 1px 0px;
-  background: lightgrey;
-  font-weight: normal;
+  padding: 2px 25px;
+
 }
 
 .crafter-select-option-selected {
   display: flex !important;
-  padding: 2px 19px;
+  padding: 3px 0px;
   font-weight: bold;
   color: black;
-  background: lightslategray;
 }
 
 
@@ -254,64 +246,13 @@
         0 var(--stroke-width) 0 var(--stroke-color),
         0 calc(var(--stroke-width) * -1) 0 var(--stroke-color);
     }
- 
-    .crafter-item-container-font-recipe {
-      text-align: right;
-      position: relative;
-      bottom: 50px;
-      left: -15px;
-      font-size: 40px;
-      font-weight: lighter;
-      --stroke-color: black;
-      --stroke-width: 2px;
-      color: white;
-      text-shadow: var(--stroke-width) 0 0 var(--stroke-color),
-        calc(var(--stroke-width) * -1) 0 0 var(--stroke-color),
-        0 var(--stroke-width) 0 var(--stroke-color),
-        0 calc(var(--stroke-width) * -1) 0 var(--stroke-color);
-    }
+
     .crafter-bottom-bar{
       position:absolute;                 
                 bottom:0;                         
                 right:0;
     }
-    .crafter-progress-bar{
-      margin-top : 5px;
-      margin-bottom : 5px;
-      height: 25px;
-      width: 80%;
-      color: pink;
-      border: 5px solid black;
-      border-radius: 15px;
-      background-color: red;
-      position: relative;
-      left: 10%; 
-      justify-content: center;
-    }
-    .crafter-progress {
-      position: relative;
-      top: -27px;
-      z-index: 2;
-      color: white; /* Change according to needs */
-      text-align: center;
-      font-weight:lighter;
-      width: 100%;
-      height: 0px;
-            --stroke-color: black;
-      --stroke-width: 1.5px;
-      text-shadow: var(--stroke-width) 0 0 var(--stroke-color),
-        calc(var(--stroke-width) * -1) 0 0 var(--stroke-color),
-        0 var(--stroke-width) 0 var(--stroke-color),
-        0 calc(var(--stroke-width) * -1) 0 var(--stroke-color);
-    }
 
-    .item-create{
-      
-    }
-    .crafter-booklist{
-      list-style-type: none;
-
-    }
-    .crafter-craft-button{
-      
+    .Test{
+      border: 5px solid red;
     }

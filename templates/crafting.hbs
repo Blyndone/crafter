@@ -1,13 +1,14 @@
-<form id="craftingMenu">
+<form id="craftingMenu" class="crafer-crafting-menu">
 
-  
-  
+ 
   
   <div class="crafter-crafting-item-name">
     {{currentItemRaw}}
+    
 
+    
   </div>
-  <div class="crafter-item-list-frame">
+  <div class="">
     <table>
       <thead></thead>
       <tbody>
@@ -15,20 +16,23 @@
         
         
           <td>
-            <select class="crafter-item-list" id="selectedItem" name="selectedItem" size="10" multiple="">
-             {{! <option class="crafter-select-option-selected" value="" selected="selected" index={{recipeIndex}}>
+            <ol class="crafter-item-list" id="selectedItem" name="selectedItem" size="10" multiple="">
+             {{! <option class="crafter-select-option-selected" value="" selected="selected" index={{recipeIndex}}
                {{! ---{{item.name}---</option> --}}
               {{#each recipies}}
 
-              {{#if (isselected @index)}}
-              <option class="crafter-select-option-selected" value="{{this}}" selected="selected" index={{@index}} name="{{this}}"> {{this}}</option>
+              {{#if (eq @index ../recipeIndex)}}
+              <a class ="item-create " name= "{{this}}" type="selectedItem" id={{@index}}><li class="crafter-select-option-selected" value="{{this}}" index={{@index}} name="{{this}}"><b>{{this}}</b></li></a>
               {{else}}
-              <option class="crafter-select-option" value="{{this}}" index={{@index}} name="{{this}}"> {{this}}</option>
+            
+
+              <a class ="item-create" name= "{{this}}" type="selectedItem" id={{@index}}><li class="crafter-select-option" value="{{this}}" index={{@index}} name="{{this}}">{{this}}</li></a>
+              
               {{/if}}
 
               {{/each}}
         
-            </select>
+            </ol>
           </td>
         
         </tr>
@@ -40,7 +44,10 @@
     <table>
       <tr>
         <td class="crafter-item-image-frame">
+              
             <img src="{{item.img}}" class="crafter-item-image" style="border: 4px solid {{#color currentItemRaw}}{{/color}}" >
+            <div class="crafter-item-container-font-recipe">{{#if (eq item.data.data.quantity 1)}}{{else}}{{item.data.data.quantity}}{{/if}}</div>
+            
           </td>
           
         <td class="crafter-item-description-frame-frame"><div class="crafter-item-description">
@@ -50,19 +57,25 @@
       </tr>
     </table>
 </div>
+
+
+<div>
+  <progress id="file" value="{{progress}}" max="100" class="crafter-progress-bar" >  </progress><
+</div>
+<div class="crafter-progress">{{progress}}% complete</div>
 <div>
   <h2>Components</h2>
 </div>  
-<table style="max-width: 500px;" style="align-self: center;"  >
+<table style="max-width: 999px;" style="align-self: center;"  >
 <tr>
-    {{#each component}}<form id="craftingmenu" class="crafter-crafting-menu">
+    {{#each components}}<form id="craftingmenu" class="crafter-crafting-menu">
      <td>
-      <table class="crafter-item-smallcard-frame" style="border: 4px groove {{#color (complookupname this) }}{{/color}}">
+      <table class="crafter-item-smallcard-frame" style="border: 4px groove {{#color this}}{{/color}}">
       <tr>
         <td style ="width:55px">
           <div class="crafter-item-container-fontframe">
-        <img src="{{#complookupimg @this}}{{this}}{{/complookupimg}}" class="crafter-item-smallcard-item"  style="border: 4px solid {{#color (complookupname this)}}{{/color}}" >
-        <div class="crafter-item-container-font">{{#compcount @this}}{{/compcount}}/1</div>
+        <img src="{{#complookupimg @this}}{{this}}{{/complookupimg}}" class="crafter-item-smallcard-item"  style="border: 4px solid {{#color this}}{{/color}}" >
+        <div class="crafter-item-container-font">{{#compcount @this}}{{/compcount}}/{{#compneededcount @index}}{{/compneededcount}}</div>
         </div>
         </td>
         <td class="crafter-item-smallcard-name" >
@@ -71,8 +84,18 @@
       </tr>
     </table>
     </td>
+    
+    
+    
+    
+    
+
+
+
     {{#if (eq @index 2)}}</tr><tr>{{/if}}
+      
   {{/each}}
+  {{#if (numberofcomps2 components)}}<td style ="width:180px"> </td>{{/if}}
 </tr>
 </table>
 
@@ -87,14 +110,17 @@
         <td class="crafter-craftingmenu-parsed-heading-label">
           <Strong>Book Name</Strong>
         </td>
-        <td class ="crafter-craftingmenu-parsed-heading"></td>
+        <td class ="crafter-craftingmenu-parsed-heading "></td>
         <td>
-          <select name="bookName" id="changeBook" value="changeBook" aria-placeholder="Bookname">
-            <option value="" selected="selected" >{{selectedBook}}</option>
+          <ol name="bookName" type="bookName" id="changeBook"  aria-placeholder="Bookname" class ="crafter-booklist">
+            <li name="{{currentBook}}" selected="selected" ><b>{{currentBook}}</b></li>
          {{#each books}}
-            <option value= "{{this}}" id={{@index}} name = "{{this}}"> {{this}}</option>
+         {{#if (ne this ../currentBook)}}
+         
+           <a name="{{this}}" class="item-create" type ="bookName" id={{@index}}> <li > {{this}}</a></li>
+            {{/if}}
            {{/each}}
-          </select>
+          </ol>
           {{!<input type="text" name = "bookName"  data-dtype="String" placeholder = "Book Name">--}}
         </td>
       </tr>
@@ -106,7 +132,7 @@
     <thead><h2>Craft Item </h2></thead>
     <tbody>
       <tr>
-        <td><button type="submit" value="craft" name = "Sub" width ="100%">Submit</button></td>
+        <td><button type="submit" value="craft" name = "Sub" width ="100%"></button><a class="crafter-craft-button" type="craft" >Craft</a></button></td>
       </tr>
     </tbody>
   </table>
@@ -114,26 +140,3 @@
 </form>
 
 
-
-{{!-- 
-<td><input type="text" name="submitText" id="inputText"  data-dtype="String" placeholder={{#if item.name}{{{item.name}{else}"Search for an Item"{/if}></td>
-<form>
-  <ul class="todo-list flexcol">
-    #each todos
-    <li class="flexrow" data-todo-id="{{id">
-      <input type="checkbox" name="{{id.isDone" title="{{localize " TODO-LIST.mark-done"" data-dtype="Boolean"
-        {{checked isDone />
-
-      <input type="text" value="{{label" name="{{id.label" data-dtype="String" />
-
-      <button type="button" title="{{localize " TODO-LIST.delete-todo"" data-action="delete"
-        class="flex0 todo-list-icon-button">
-        <i class="fas fa-trash"></i>
-      </button>
-    </li>
-    {{/each
-  </ul>
-
-  <button type="button" data-action="create"><i class="fas fa-plus"></i> {{localize "TODO-LIST.add-todo"</button>
-</form>
---}}
