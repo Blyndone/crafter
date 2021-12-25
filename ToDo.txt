@@ -44,7 +44,8 @@ Code goals
 Features
 //    Recipe Quantity => 3/3 
 //        Tagging quantities
-    Component Proxies
+//    Component Proxies
+    Dialog Box for selecting Proxy Components 
     Component Price Requirments
     Component Drowdown Selector for Proxies
     Crafting and Book Selector
