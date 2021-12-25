@@ -1,50 +1,4 @@
-{
-<<<<<<< HEAD
-  "name": "crafter",
-  "title": "Crafter",
-  "description": "A module for Gm's to create recipies, and Players to craft items.",
-  "authors": [
-    {
-      "name": "Blyndone"
-    }
-  ],
-  "version": "1",
-  "minimumCoreVersion": "0.8.8",
-  "scripts": [
-    "scripts/crafter.js"
-  ],
-  "packs": [
-    {
-        "name": "crafter-components",
-        "label": "Crafting Components",
-        "path": "packs/crafter-components.db",
-        "entity": "Item",
-        "module": "crafter"
 
-    },
-    {
-      "name": "crafter-recipes",
-      "label": "Crafting Recipies",
-      "path": "packs/crafter-recipes.db",
-      "entity": "Item",
-      "module": "crafter"
-    }
-  ],
-  "languages": [
-    {
-      "lang": "en",
-      "name": "English",
-      "path": "languages/en.json"
-    }
-  ],
- 
-  "styles": [
-    "styles/crafter.css"
-  ],
-  "manifest": "https://raw.githubusercontent.com/Blyndone/crafter/master/module.json",
-  "download": "https://github.com/Blyndone/crafter/archive/refs/heads/master.zip"
-}
-=======
     "name": "crafter",
     "title": "Crafter",
     "description": "A module for Gm's to create recipies, and Players to craft items.",
@@ -74,4 +28,4 @@
       "manifest": "https://raw.githubusercontent.com/Blyndone/crafter/development/module.json",
       "download": "https://github.com/Blyndone/crafter/archive/refs/heads/development.zip"
   }
->>>>>>> development
+
