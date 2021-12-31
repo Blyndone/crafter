@@ -1,4 +1,4 @@
-//Test asdfasdf
+//Test234
 class Crafter {
     static ID = 'crafter';
     static COMPPACK = '';
