@@ -7,8 +7,32 @@
         "name": "Blyndone"
       }
     ],
+
     "version": "1",
     "minimumCoreVersion": "0.8.8",
+    "packs": [
+      {
+          "name": "crafter-components",
+          "label": "Crafter Compoents",
+          "path": "./packs/crafter-components.db",
+          "entity": "Item",
+          "type": "Item"
+      },
+      {
+          "name": "crafter-recipes",
+          "label": "Crafter Recipes",
+          "path": "./packs/crafter-recipes.db",
+          "entity": "Item",
+          "type": "Item"
+      },
+      {
+        "name": "crafter-books-and-crafters",
+        "label": "Crafter Books and Crafters",
+        "path": "./packs/crafter-books-and-crafters.db",
+        "entity": "Actor",
+        "type": "Actor"
+    }
+    ],
     "scripts": [
         "scripts/crafter.js",
         "scripts/handlebars.js",
