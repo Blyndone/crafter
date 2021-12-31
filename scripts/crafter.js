@@ -110,7 +110,7 @@ Hooks.on('renderJournalDirectory', Crafter.renderJournalDirectory);
 
   Hooks.once('ready', () => {
     Crafter.initialize();
-    game.packs.get('world.crafter-components').getIndex({fields: ['name', 'img', 'data.rarity']});
+    game.packs.get('crafter.crafter-components').getIndex({fields: ['name', 'img', 'data.rarity']});
     
   });
 
