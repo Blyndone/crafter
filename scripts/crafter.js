@@ -1,5 +1,4 @@
-
-//test
+//Test
 class Crafter {
     static ID = 'crafter';
     static COMPPACK = '';
@@ -114,6 +113,50 @@ Hooks.on('renderJournalDirectory', Crafter.renderJournalDirectory);
     game.packs.get('world.crafter-components').getIndex({fields: ['name', 'img', 'data.rarity']});
     
   });
+
+
+  async function testPromise(options = [], prompt = ``){
+    return new Promise((resolve) => {
+      let dialog_options = (options[0] instanceof Array)
+        ? options.map(o => `<option class="" value="${o[0]}" index="${o[0]}" name="${o[0]}">${o[0]}</option>`).join(``)
+        : options.map(o => `<option class="" value="${o}" index="${o}" name="${o}"><b>${o}</b></option>`).join(``);
+       // <a class ="item-create " name= "${o[0]}" type="selectedItem"><li class="crafter-select-option-selected" value="${o[0]}" index="${o[0]}" name="${o[0]}"><b>${o[0]}</b></li></a>
+      let content = `
+      <head>
+
+    <script type="text/javascript">
+window.onmousedown = function (e) {
+    var el = e.target;
+    if (el.tagName.toLowerCase() == 'option' && el.parentNode.hasAttribute('multiple')) {
+        e.preventDefault();
+
+        // toggle selection
+        if (el.hasAttribute('selected')) el.removeAttribute('selected');
+        else el.setAttribute('selected', '');
+
+        // hack to correct buggy behavior
+        var select = el.parentNode.cloneNode(true);
+        el.parentNode.parentNode.replaceChild(select, el.parentNode);
+    }
+}
+        
+    </script>
+
+</head>
+      <table style="width=100%">
+        <tr><th>${prompt}</th></tr>
+        <tr><td><select id="choice" style="crafter-item-list"  size="10" multiple="multiple">
+        ${dialog_options}
+        </select></td></tr>
+      </table>`;
+    
+      new Dialog({
+        content, 
+        buttons : { OK : {label : `OK`, callback : async (html) => { resolve(html.find('#choice').val()); } } }
+      }).render(true);
+    });
+  }
+
 
  
 
@@ -358,6 +401,11 @@ class CraftingMenu extends FormApplication{
 
 
     async CraftRecipe() {
+        
+        
+        
+        
+        
         Crafter.craftingMenu.options.compInv = [];
         let k = true;
         let c = false;
@@ -365,6 +413,38 @@ class CraftingMenu extends FormApplication{
         let compInv = Crafter.craftingMenu.options.components;
         let crafterInv = [];
         let recipeInv = this.options.componentsNum.slice();
+        
+
+
+
+
+        for (let i = 0; i < components.length; i++) {
+            let y = [];
+            let z = game.actors.getName("TestCrafter").items.filter(e=>e.name == components[i]);
+            for (let i = 0; i < z.length; i++) {
+                y.push(z[i].name);
+            }
+            if (RecipeData.findProxy(components[i])==null){
+                let z = game.actors.getName("TestCrafter").data.items.getName(components[i]);
+                for (let i = 0; i < z.length; i++) {
+                    y.push(z[i].name);
+                    
+                }
+                
+            }
+
+            let x = await testPromise(y);
+            Crafter.log(false, x);
+            
+        
+            
+        }
+        
+        
+
+
+        
+        
         for (let i = 0; i < components.length; i++) {
            crafterInv.push(RecipeData.compCount(components[i]));
         }
@@ -388,7 +468,7 @@ class CraftingMenu extends FormApplication{
 
             for (let i = 0; i < recipeInv.length; i++) {
                 while(recipeInv[i] >0){
-                    let currentItem;
+                    let currentItem;    
                     if (RecipeData.findProxy(components[i])==null){
                         currentItem = game.actors.getName("TestCrafter").data.items.getName(components[i]);
                     }else{
