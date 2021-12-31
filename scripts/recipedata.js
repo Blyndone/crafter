@@ -9,7 +9,7 @@ class RecipeData {
 
 
     static compfromPack(name){
-       return game.packs.get('world.crafter-components').index.filter(i => i.name === name);
+       return game.packs.get('crafter.crafter-components').index.filter(i => i.name === name);
     }
 
 
