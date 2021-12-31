@@ -1,3 +1,5 @@
+
+//test
 class Crafter {
     static ID = 'crafter';
     static COMPPACK = '';
