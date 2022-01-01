@@ -46,6 +46,32 @@ class Crafter {
      * 
      * 
      * 
+     * Variable names
+     *      Actors
+     * Book - book
+     * Book Name - bookName 
+     * Crafter - crafter
+     * Crafter Name - crafterName
+     * 
+     *      Item
+     * Single Item - item
+     * Single Recipe - recipe
+     * Single Component - comp
+     * 
+     * Multiple Item - itemA
+     * Multiple Recipe - recipeA
+     * Multipe Component - compA
+     * 
+     * Single Item Name - itemName
+     * Single Recipe Name - recipeName
+     * Single Component Name -compName
+     * 
+     * Multiple Item Name - itemNameA
+     * Multiple Recipe Name - recipeNameA
+     * Multipe Component Name - compNameA
+     * 
+     * 
+     * 
      * 
      */
 
@@ -115,11 +141,11 @@ Hooks.on('renderJournalDirectory', Crafter.renderJournalDirectory);
   });
 
 
-  async function testPromise(options = [], prompt = ``){
+  async function testPromise(options = [], prompt = ``, count){
     return new Promise((resolve) => {
       let dialog_options = (options[0] instanceof Array)
-        ? options.map(o => `<option class="" value="${o[0]}" index="${o[0]}" name="${o[0]}">${o[0]}</option>`).join(``)
-        : options.map(o => `<option class="" value="${o}" index="${o}" name="${o}"><b>${o}</b></option>`).join(``);
+        ? options.map(o => `<option class="crafter-item-list" value="${o[0]}" index="${o[0]}" name="${o[0]}">${o[0]}</option>`).join(``)
+        : options.map(o => `<option class="crafter-item-list" value="${o}" index="${o}" name="${o}"><b>${o}</b></option>`).join(``);
        // <a class ="item-create " name= "${o[0]}" type="selectedItem"><li class="crafter-select-option-selected" value="${o[0]}" index="${o[0]}" name="${o[0]}"><b>${o[0]}</b></li></a>
       let content = `
       <head>
@@ -144,7 +170,7 @@ window.onmousedown = function (e) {
 
 </head>
       <table style="width=100%">
-        <tr><th>${prompt}</th></tr>
+        <tr><th>${prompt} ${count}</th></tr>
         <tr><td><select id="choice" style="crafter-item-list"  size="10" multiple="multiple">
         ${dialog_options}
         </select></td></tr>
@@ -185,10 +211,10 @@ async function createRecipe(book, targetItem, materialType, profession, time, di
     return item;
     }
 
-async function craftFromRecipe(book, crafter, recipe) {
-    book = game.actors.getName(book);
-    crafter = game.actors.getName(crafter);
-    recipe = book.data.items.getName(recipe);
+async function craftFromRecipe(bookName, crafterName, recipeName) {
+    let book = game.actors.getName(bookName);
+    let crafter = game.actors.getName(crafterName);
+    let recipe = book.data.items.getName(recipeName);
     let desc = recipe.data.data.description.value;
     desc = desc.substring(0, desc.indexOf(RecipeData.RECIPE));
     let name =recipe.name.substring(8);
@@ -213,10 +239,10 @@ async function log(force, ...args) {
 
 class ProgressTracker{
 
-    static checkProgress(crafter, book, recipe){
-        crafter = game.actors.getName(crafter);
-        book = game.actors.getName(book);
-        recipe = book.data.items.getName(recipe);
+    static checkProgress(crafterName, bookName, recipeName){
+        let crafter = game.actors.getName(crafterName);
+        let book = game.actors.getName(bookName);
+        let recipe = book.data.items.getName(recipeName);
         let flag =  recipe.getFlag(Crafter.ID, crafter.id);
         if (flag !=  undefined){
         return flag;
@@ -227,10 +253,10 @@ class ProgressTracker{
 
     }
     //Crafter "Name", Book "Name", Recipe "Name"
-    static async setProgress(crafter, book, recipe, incPer){
-        crafter = game.actors.getName(crafter);
-        book = game.actors.getName(book);
-        recipe = book.data.items.getName(recipe);
+    static async setProgress(crafterName, bookName, recipeName, incPer){
+        let crafter = game.actors.getName(crafterName);
+        let book = game.actors.getName(bookName);
+        let recipe = book.data.items.getName(recipeName);
         let flag = await recipe.getFlag(Crafter.ID, crafter.id);
         if(flag == undefined){
             flag =0;
@@ -401,95 +427,69 @@ class CraftingMenu extends FormApplication{
 
 
     async CraftRecipe() {
-        
-        
-        
-        
-        
+                
         Crafter.craftingMenu.options.compInv = [];
         let k = true;
         let c = false;
-        let components = Crafter.craftingMenu.options.components;
-        let compInv = Crafter.craftingMenu.options.components;
+        let compNameA = Crafter.craftingMenu.options.components;
+        //let compInv = Crafter.craftingMenu.options.components;
         let crafterInv = [];
         let recipeInv = this.options.componentsNum.slice();
         
-
-
-
-
-        for (let i = 0; i < components.length; i++) {
-            let y = [];
-            let z = game.actors.getName("TestCrafter").items.filter(e=>e.name == components[i]);
-            for (let i = 0; i < z.length; i++) {
-                y.push(z[i].name);
-            }
-            if (RecipeData.findProxy(components[i])==null){
-                let z = game.actors.getName("TestCrafter").data.items.getName(components[i]);
-                for (let i = 0; i < z.length; i++) {
-                    y.push(z[i].name);
-                    
-                }
-                
-            }
-
-            let x = await testPromise(y);
-            Crafter.log(false, x);
-            
-        
-            
+        //------ Checks if Valid Craft --------
+        for (let i = 0; i < compNameA.length; i++) {
+           crafterInv.push(RecipeData.compCount(compNameA[i]));
         }
-        
-        
-
-
-        
-        
-        for (let i = 0; i < components.length; i++) {
-           crafterInv.push(RecipeData.compCount(components[i]));
-        }
-
-      
             for (let i = 0; i < recipeInv.length; i++) {
                     c=false
                 if (crafterInv[i] >= recipeInv[i]) {
-                    c = true;
-                    
+                    c = true;  
                 }
                 k= (c&&k)    
-            
         }
         if (k== true) {
+        // ----- begin Crafting Logic -------
 
-            let item = craftFromRecipe(Crafter.craftingMenu.options.currentBook, "TestCrafter", Crafter.craftingMenu.options.currentItem);
-            await ProgressTracker.setProgress("TestCrafter",Crafter.craftingMenu.options.currentBook, Crafter.craftingMenu.options.currentItem, 20);
-            Crafter.craftingMenu.options.progress = ProgressTracker.checkProgress("TestCrafter", Crafter.craftingMenu.options.currentBook, Crafter.craftingMenu.options.currentItem);
-            if(item){
-
-            for (let i = 0; i < recipeInv.length; i++) {
-                while(recipeInv[i] >0){
-                    let currentItem;    
-                    if (RecipeData.findProxy(components[i])==null){
-                        currentItem = game.actors.getName("TestCrafter").data.items.getName(components[i]);
-                    }else{
-                        currentItem = RecipeData.findProxy(components[i])[0];
-                    }   
-                       
-                        const updates = [{_id: currentItem.id, data: { quantity: currentItem.data.data.quantity -1 } }];
+                let que = [];
+                for (let i = 0; i < recipeInv.length; i++) {
+                    
+                    let protoQue = [];
+                    while (protoQue.length !=recipeInv[i]){
+                     protoQue = await testPromise(RecipeData.unpackComp("TestCrafter", compNameA[i]), "Select Components", recipeInv[i])
+                    }
+                   
+                   
+                   
+                    for (let j = 0; j < protoQue.length; j++) {
+                        que.push(protoQue[j]);
+                        
+                    }
+                    
+                }
+               let actor = game.actors.getName("TestCrafter");
+                for (let i = 0; i < que.length; i++) {
+                    let comp = actor.items.getName(que[i]);
+                
+                        const updates = [{_id: comp.id, data: { quantity: comp.data.data.quantity -1 } }];
                        
                         const updated = await game.actors.getName("TestCrafter").updateEmbeddedDocuments("Item", updates);
                     //    currentItem.data.data.quantity-=1;
-                        recipeInv[i]-=1;
-                        if (currentItem.data.data.quantity == 0){
-                            await game.actors.getName("TestCrafter").deleteEmbeddedDocuments("Item", [currentItem.id]);
+                        if (comp.data.data.quantity == 0){
+                            await game.actors.getName("TestCrafter").deleteEmbeddedDocuments("Item", [comp.id]);
                         }
 
                     }
 
-                }
+                    let item = craftFromRecipe(Crafter.craftingMenu.options.currentBook, "TestCrafter", Crafter.craftingMenu.options.currentItem);
+                    //---Progress Setting
+                    await ProgressTracker.setProgress("TestCrafter",Crafter.craftingMenu.options.currentBook, Crafter.craftingMenu.options.currentItem, 20);
+                    Crafter.craftingMenu.options.progress = ProgressTracker.checkProgress("TestCrafter", Crafter.craftingMenu.options.currentBook, Crafter.craftingMenu.options.currentItem);
 
-            }
+            
         }
+
+
+
     }
 //-------Sets the initial options data-------
 //-------Should only be run once--------

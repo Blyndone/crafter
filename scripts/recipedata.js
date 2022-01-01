@@ -40,9 +40,9 @@ class RecipeData {
         }
         
     }
-    static recipeItemFromName(book, name) {
+    static recipeItemFromName(bookName, recipeName) {
         
-        return game.actors.getName(book).items.getName(name)
+        return game.actors.getName(bookName).items.getName(recipeName)
     }
 
 //-------In: Book name (String in name field, usually "Book") and returns an array of book names --------
@@ -55,12 +55,12 @@ class RecipeData {
         return books;
     }
  //-------In: Book name and key (String in name field, usually "(Recipe)") and returns an array of Recipe Names--------       
-    static findRecipes(book, key){
-        book = game.actors.getName(book);
-        let multiObj = book.data.items.filter(item => (item.name).includes(key) );
+    static findRecipes(bookName, key){
+        let book = game.actors.getName(bookName);
+        let recipeA = book.data.items.filter(item => (item.name).includes(key) );
         let multi = [];
-        for (let i = 0; i< multiObj.length; i++){
-            multi.push(multiObj[i].name)
+        for (let i = 0; i< recipeA.length; i++){
+            multi.push(recipeA[i].name)
         }
         multi.sort();
         return  multi;
@@ -87,9 +87,9 @@ class RecipeData {
 
     }
     //-------Parses a Recipe and returns the key data as an object --------
-    static recipeParser(book, item){
-        book = game.actors.getName(book);
-        item = book.data.items.getName(item);
+    static recipeParser(bookName, itemName){
+        let book = game.actors.getName(bookName);
+        let item = book.data.items.getName(itemName);
         let desc = item.data.data.description.value;
         let component =  desc.substring(desc.indexOf(this.COMPONENT)+this.COMPONENT.length+6,desc.indexOf(this.TIME)-6);
         let comp = component.split('|');
@@ -166,6 +166,49 @@ static findProxy(value){
     }
         
 }
-    
 
+static unpackComp(crafterName, compName){
+    let crafter = game.actors.getName(crafterName); 
+    let unpackedComp = [];
+    let prime = crafter.data.items.filter(e => e.name == compName);
+    let proxy = this.findProxy(compName);
+
+    for (let i = 0; i < prime.length; i++) {
+        for (let j = 0; j < prime[i].data.data.quantity; j++) {
+            unpackedComp.push(prime[i].name)            
+        }
+    }
+if (proxy!= null){
+
+    for (let i = 0; i < proxy.length; i++) {
+        for (let j = 0; j < proxy[i].data.data.quantity; j++) {
+            unpackedComp.push(proxy[i].name)            
+        }
+    }
+}
+    return unpackedComp;
+
+}
+   
+static repackComp(unpackedComp){
+    let repack = [];
+    let repackcount = [];
+
+    for (let i = 0; i < unpackedComp.length; i++) {
+        if (repack.indexOf(unpackedComp[i]) != -1){
+            if(isNaN(repackcount[repack.indexOf(unpackedComp[i])])){
+                repackcount[repack.indexOf(unpackedComp[i])] = 0;
+            }
+
+            repackcount[repack.indexOf(unpackedComp[i])] +=1;
+        }else{
+            repack.push(unpackedComp[i]);
+            repackcount[repack.indexOf(unpackedComp[i])] +=1;
+        }
+
+    }
+
+    return {repack, repackcount};
+
+}
 }
